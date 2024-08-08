@@ -377,7 +377,6 @@ public class MainPanel extends WizardPanel implements JMCHWizardPanel{
 		subMenus[0].add(new CustomMenuItem(LCFS, true));
 		subMenus[0].add(new CustomMenuItem(SJF, true));
 		subMenus[0].add(new CustomMenuItem(LJF, true));
-		/*subMenus[0].add(new CustomMenuItem(FCFS_PR, true)); */
 		
 		subMenus[1] = new JPopupMenu(); //subMenu for the separator
 

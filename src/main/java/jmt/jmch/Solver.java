@@ -152,7 +152,7 @@ public class Solver implements CommonConstants{
     /** Add a class to the model (similar to the task you perform in JSIM when you click on the class button) */
     private void addClass(int indexInter){
         classKey = model.addClass(Defaults.get("className") + (++classNameIndex),
-            Defaults.getAsInteger("classType").intValue(),
+            0,
             Defaults.getAsInteger("classPriority"),
             Defaults.getAsDouble("classSoftDeadline"),
             Defaults.getAsInteger("classPopulation"), 

@@ -140,7 +140,7 @@ public class Constants {
         "Select how many servers are available for each station",
         "Select the type of distribution for the inter arrival time between jobs",
         "Select the type of distribution for the service time for each station in the simulation",
-        "Select the traffic intensity for the simulation. Based on the chosen value, the parameters of Inter arrival and Service distribution will be adjusted accordingly",
+        "Select the arrival rate and service time of the simulation such that the utilization of the system is always "+ "\u2264" + " 1",
         "Select the maximum number of samples collected for each performance index in the simulation",
         "Once all the parameters are setted, click this button to create the animation. At this point you can start the animation"
     };

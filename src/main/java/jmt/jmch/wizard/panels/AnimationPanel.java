@@ -128,10 +128,10 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     private final double multiplierSlider = 0.01; 
     private final int startValueSlider = 50;
     private final String sliderArrival = "Avg. Arrival Rate (\u03BB): %.2f cust./s";
-    private final String sliderService = "Avg. Service Rate (\u03BC): %.2f s" + "\u207B" + "\u00B9";
-    private final String sliderTraffic = "Traffic Intensity (\u03C1): ";
+    private final String sliderService = "Avg. Service Time (S): %.2f s";
+    private final String sliderTraffic = "Avg. Utilization (U): ";
     private double lambda = 0.5;
-    private double mhu = 0.5;
+    private double S = 0.5;
     private final DecimalFormat df = new DecimalFormat("#.##");
 
     //-------------all the Actions of this panel------------------
@@ -399,7 +399,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         trafficIntensityPanel.add(avgServiceTimeLabel);
         avgServiceTimeSlider = createSlider();
         trafficIntensityPanel.add(avgServiceTimeSlider);
-        trafficIntensityLabel = new JLabel(sliderTraffic + df.format(1));
+        trafficIntensityLabel = new JLabel(sliderTraffic + df.format(avgArrivalRateSlider.getValue()*multiplierSlider * avgServiceTimeSlider.getValue()*multiplierSlider));
         trafficIntensityPanel.add(trafficIntensityLabel);
         //paramTrafficLabel = new JLabel(String.format(sliderFS, lambda, mhu));
         //trafficIntensityPanel.add(paramTrafficLabel);
@@ -480,21 +480,24 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     public void sliderStateChanged(ChangeEvent evt){
         JSlider source = (JSlider) evt.getSource();
         lambda = avgArrivalRateSlider.getValue() * multiplierSlider;
-        mhu = avgServiceTimeSlider.getValue() * multiplierSlider;
+        S = avgServiceTimeSlider.getValue() * multiplierSlider;
 
         if(source == avgArrivalRateSlider){         
             avgArrivalRateLabel.setText(String.format(sliderArrival, lambda));
         }
         else{            
-            avgServiceTimeLabel.setText(String.format(sliderService, mhu));
+            avgServiceTimeLabel.setText(String.format(sliderService, S));
         }
 
-        double rho = lambda / mhu;
-        trafficIntensityLabel.setText(sliderTraffic + df.format(rho));
+        double U = lambda * S;
 
-        if (rho > 0 && rho <= 1) { 
+        if (U > 0 && U <= 1) { 
+            trafficIntensityLabel.setText(sliderTraffic + df.format(U));
+            trafficIntensityLabel.setForeground(Color.BLACK);
             createButton.setEnabled(true);
         } else {
+            trafficIntensityLabel.setText(sliderTraffic + "Saturation");
+            trafficIntensityLabel.setForeground(Color.RED);
             createButton.setEnabled(false);
         }
     }
@@ -559,7 +562,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         reloadAnimation();
 
         AnimDistribution sd = DistributionFactory.createDistribution(String.valueOf(serviceComboBox.getSelectedItem()));
-        sd.setMean(mhu);
+        sd.setMean(1/S);
         AnimDistribution ad = DistributionFactory.createDistribution(String.valueOf(interAComboBox.getSelectedItem()));
         ad.setMean(lambda);
 
@@ -599,7 +602,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
             prob[1] = (double) prob2.getValue();
             prob[2] = 1.0 - prob[0] - prob[1];
         }
-        solver = new Solver(simulation, lambda, mhu, interAComboBox.getSelectedIndex(), serviceComboBox.getSelectedIndex(), servers, prob, (Integer) maxSamples.getValue());
+        solver = new Solver(this, simulation, lambda, 1/S, interAComboBox.getSelectedIndex(), serviceComboBox.getSelectedIndex(), servers, prob, (Integer) maxSamples.getValue());
 
         File temp = null;
         try {

@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import jmt.gui.common.CommonConstants;
 import jmt.gui.common.Defaults;
+import jmt.gui.common.animation.Animation;
 import jmt.gui.common.definitions.CommonModel;
 import jmt.gui.common.definitions.ServerType;
 import jmt.gui.common.definitions.SimulationDefinition;
@@ -17,6 +18,7 @@ import jmt.gui.common.distributions.Uniform;
 import jmt.gui.common.routingStrategies.ProbabilityRouting;
 import jmt.jmch.simulation.Simulation;
 import jmt.jmch.simulation.SimulationType;
+import jmt.jmch.wizard.panels.AnimationPanel;
 
 /**
  * This class transforms the information of the Animation to match the structure of the CommonModel class.
@@ -27,6 +29,7 @@ import jmt.jmch.simulation.SimulationType;
  * Time: 17.28
  */
 public class Solver implements CommonConstants{
+    private AnimationPanel panel;
     private CommonModel model;
     private Simulation simulation;
     private boolean isSingleQueue = true;
@@ -99,7 +102,8 @@ public class Solver implements CommonConstants{
      * @param prob array of probabilities (for Routing Probabilities)
      * @param maxSamples max samples for the animation
      */
-    public Solver(Simulation sim, double lambda, double mhu, int indexInter, int indexService, int nservers, double[] prob, int maxSamples){
+    public Solver(AnimationPanel p, Simulation sim, double lambda, double mhu, int indexInter, int indexService, int nservers, double[] prob, int maxSamples){
+        panel = p;
         model = new CommonModel();
         simulation = sim;
         servers = nservers;
@@ -152,7 +156,7 @@ public class Solver implements CommonConstants{
     /** Add a class to the model (similar to the task you perform in JSIM when you click on the class button) */
     private void addClass(int indexInter){
         classKey = model.addClass(Defaults.get("className") + (++classNameIndex),
-            0,
+            0,//Defaults.getAsInteger("classType").intValue(), 
             Defaults.getAsInteger("classPriority"),
             Defaults.getAsDouble("classSoftDeadline"),
             Defaults.getAsInteger("classPopulation"), 

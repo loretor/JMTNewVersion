@@ -120,7 +120,7 @@ public class Source extends JComponent implements JobContainer{
 		start = System.currentTimeMillis();
 		pauseTime = 0;
 		
-		long nextValue = (long)nextRandomValue*1000;
+		long nextValue = Math.round(nextRandomValue * 1000);
 		long diff = nextValue - passedTime;
 		progression = (float) diff/nextValue;
 		

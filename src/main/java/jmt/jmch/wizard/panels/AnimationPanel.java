@@ -22,12 +22,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -52,6 +54,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.w3c.dom.events.MouseEvent;
 
 import jmt.framework.gui.components.JMTMenuBar;
 import jmt.framework.gui.components.JMTToolBar;
@@ -64,6 +67,7 @@ import jmt.gui.common.definitions.GuiInterface;
 import jmt.gui.common.definitions.MeasureDefinition;
 import jmt.gui.common.definitions.ResultsModel;
 import jmt.gui.common.xml.XMLWriter;
+import jmt.jmarkov.utils.Formatter;
 import jmt.jmch.Constants;
 import jmt.jmch.Solver;
 import jmt.jmch.wizard.actionsWizard.About;
@@ -107,9 +111,9 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     private JSpinner serversSpinner;
 
     private JLabel avgArrivalRateLabel;
-    private JSlider avgArrivalRateSlider;
+    private JSlider lambdaS;
     private JLabel avgServiceTimeLabel;
-    private JSlider avgServiceTimeSlider;
+    private JSlider sS;
     private JLabel trafficIntensityLabel;
 
     private JSpinner prob1 = null; //those two spinners are instanciated only if Probabilisitic routing is selected
@@ -130,9 +134,17 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     private final String sliderArrival = "Avg. Arrival Rate (\u03BB): %.2f cust./s";
     private final String sliderService = "Avg. Service Time (S): %.2f s";
     private final String sliderTraffic = "Avg. Utilization (U): ";
-    private double lambda = 0.5;
-    private double S = 0.5;
+    private int LAMBDA_I = 50;
+    private int S_I = 95;
     private final DecimalFormat df = new DecimalFormat("#.##");
+    private boolean lambdaSChange = true;
+	private boolean sSChange = true;
+    private double sMultiplier = 1; //service time slide bar multiplier
+	private double lambdaMultiplier = 1; //lambda slide bar multiplier
+	private int lambdaMultiplierChange = 0; //for the lambda slide bar
+	private int sMultiplierChange = 1; //for the service slide bar
+    private double lambda = LAMBDA_I * lambdaMultiplier;
+    private double S = S_I * sMultiplier;
 
     //-------------all the Actions of this panel------------------
     private AbstractMCHAction exit;
@@ -393,13 +405,13 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         trafficIntensityPanel.setLayout(new GridLayout(5,1));
         avgArrivalRateLabel = new JLabel(String.format(sliderArrival, startValueSlider * multiplierSlider));
         trafficIntensityPanel.add(avgArrivalRateLabel);
-        avgArrivalRateSlider = createSlider();
-        trafficIntensityPanel.add(avgArrivalRateSlider);
+        createLambdaSlider();
+        trafficIntensityPanel.add(lambdaS);
         avgServiceTimeLabel = new JLabel(String.format(sliderService, startValueSlider * multiplierSlider));
         trafficIntensityPanel.add(avgServiceTimeLabel);
-        avgServiceTimeSlider = createSlider();
-        trafficIntensityPanel.add(avgServiceTimeSlider);
-        trafficIntensityLabel = new JLabel(sliderTraffic + df.format(avgArrivalRateSlider.getValue()*multiplierSlider * avgServiceTimeSlider.getValue()*multiplierSlider));
+        createSSlider();
+        trafficIntensityPanel.add(sS);
+        trafficIntensityLabel = new JLabel(sliderTraffic + df.format(lambdaS.getValue()*multiplierSlider * sS.getValue()*multiplierSlider));
         trafficIntensityPanel.add(trafficIntensityLabel);
         //paramTrafficLabel = new JLabel(String.format(sliderFS, lambda, mhu));
         //trafficIntensityPanel.add(paramTrafficLabel);
@@ -444,51 +456,122 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         return p;
 	}
 
-    /* Method for setting the slider for the traffic intensity */
-    private JSlider createSlider(){
-        JSlider slider = new JSlider();
-        slider.setMaximum(100);
-        slider.setMinimum(0);
-        slider.setMajorTickSpacing(25);
-        slider.setMinorTickSpacing(1);
-        slider.setSnapToTicks(true);
-        slider.setValue(startValueSlider);
-
-        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
-        labelTable.put(0, new JLabel("0.0"));
-        labelTable.put(25, new JLabel("0.25"));
-        labelTable.put(50, new JLabel("0.5"));
-        labelTable.put(75, new JLabel("0.75"));
-        labelTable.put(100, new JLabel("1.0"));
-        slider.setLabelTable(labelTable);
-        slider.setPaintLabels(true);
-
-        slider.addChangeListener(new ChangeListener() {
+    /* Method for setting the slider for the Lambda */
+    private void createLambdaSlider(){
+        lambdaS = new JSlider();
+        
+        lambdaMultiplier = 0.01;
+        lambdaMultiplierChange = 0;
+        lambdaS.setMaximum(100);
+        lambdaS.setMinimum(0);
+        lambdaS.setMajorTickSpacing(25);
+        lambdaS.setMinorTickSpacing(1);
+        lambdaS.setPaintLabels(true);
+        lambdaS.setSnapToTicks(true);
+        lambdaS.setValue(LAMBDA_I);
+        lambda = LAMBDA_I * lambdaMultiplier;
+        setLambdaSlider();
+        lambdaS.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent evt) {
-                sliderStateChanged(evt);
+                lambdaSStateChanged(evt);
+                if (lambdaSChange) {
+                    setLambdaMultiplier();
+                }
+
             }
         });
+        lambdaS.addMouseListener(new MouseListener() {
 
-        return slider;
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {}
+
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                lambdaSChange = false;
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent e) {
+                setLambdaMultiplier();
+				lambdaSChange = true;
+            }
+
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {}
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {}
+
+        });
+        lambdaS.repaint();
     }
 
-    /**
-     * Called each time the sliders change their value.
-     * One method for all the sliders in the parameters panel
-     * @param evt the trigger event
-     */
-    public void sliderStateChanged(ChangeEvent evt){
-        JSlider source = (JSlider) evt.getSource();
-        lambda = avgArrivalRateSlider.getValue() * multiplierSlider;
-        S = avgServiceTimeSlider.getValue() * multiplierSlider;
+    /* Method for setting the slider for the Lambda */
+    private void createSSlider(){
+        sS = new JSlider();
 
-        if(source == avgArrivalRateSlider){         
-            avgArrivalRateLabel.setText(String.format(sliderArrival, lambda));
-        }
-        else{            
-            avgServiceTimeLabel.setText(String.format(sliderService, S));
-        }
+        sS.setMaximum(100);
+        sS.setMinimum(0);
+        sS.setMajorTickSpacing(25);
+        sS.setMinorTickSpacing(1);
+        sS.setPaintLabels(true);
+        sMultiplier = 0.02;
+        sMultiplierChange = 1;
+        sS.setValue(S_I);
+        S = S_I * sMultiplier;
 
+        setSSlider();
+        sS.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent evt) {
+                sSStateChanged(evt);
+                if (sSChange) {
+                    setSMultiplier();
+                }
+            }
+        });
+        sS.addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {}
+
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                sSChange = false;
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent e) {
+                setSMultiplier();
+				sSChange = true;
+            }
+
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {}
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {}
+        });
+    }
+
+    //--------------------- Methods for updating dinamically the sliders (from MMQueues.java) ------------------------
+    protected void lambdaSStateChanged(ChangeEvent evt) {
+		if (lambdaS.getValue() == 0) {
+			lambdaMultiplier = 0.01;
+			lambdaMultiplierChange = 0;
+			lambdaS.setValue(1);
+		}
+		lambda = lambdaMultiplier * lambdaS.getValue();
+		avgArrivalRateLabel.setText(String.format(sliderArrival, lambdaS.getValue() * lambdaMultiplier));
+		setSSlider();
+		updateFields();
+	}
+
+	protected void sSStateChanged(ChangeEvent evt) {
+		setSSlider();
+		updateFields();
+	}
+
+    public void updateFields(){
         double U = lambda * S;
 
         if (U > 0 && U <= 1) { 
@@ -499,8 +582,109 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
             trafficIntensityLabel.setText(sliderTraffic + "Saturation");
             trafficIntensityLabel.setForeground(Color.RED);
             createButton.setEnabled(false);
-        }
+        }   
     }
+
+    public void setSSlider() {
+		Dictionary<Integer, JLabel> d = sS.getLabelTable();
+
+		for (int i = sS.getMinimum(); i <= sS.getMaximum(); i += sS.getMajorTickSpacing()) {
+			d.put(new Integer(i), new JLabel("" + Formatter.formatNumber(i * sMultiplier, 2)));
+		}
+		sS.setLabelTable(d);
+        avgServiceTimeLabel.setText(String.format(sliderService, sS.getValue() * sMultiplier));
+        S = sS.getValue() * sMultiplier;
+		sS.repaint();
+	}
+
+	public void setLambdaSlider() {
+		Dictionary<Integer, JLabel> ld = lambdaS.getLabelTable();
+
+		for (int i = lambdaS.getMinimum(); i <= lambdaS.getMaximum(); i += lambdaS.getMajorTickSpacing()) {
+			ld.put(new Integer(i), new JLabel("" + Formatter.formatNumber(i * lambdaMultiplier, 2)));
+		}
+
+		lambdaS.setLabelTable(ld);
+        avgArrivalRateLabel.setText(String.format(sliderArrival, lambdaS.getValue() * lambdaMultiplier));
+        lambda = lambdaS.getValue() * lambdaMultiplier;
+        lambdaS.repaint();
+	}
+
+    public void setLambdaMultiplier() {
+		while (true) {
+			if (lambdaS.getValue() > lambdaS.getMaximum() * 0.95) {
+				if (lambdaMultiplierChange <= 4) {
+					if (lambdaMultiplierChange % 2 == 0) {
+						lambdaMultiplier *= 2;
+						setLambdaSlider();
+						lambdaS.setValue((lambdaS.getValue() + 1) / 2);
+					} else {
+						lambdaMultiplier *= 5;
+						setLambdaSlider();
+						lambdaS.setValue((lambdaS.getValue() + 1) / 5);
+					}
+					lambdaMultiplierChange++;
+				} else {
+					break;
+				}
+			} else if (lambdaS.getValue() < lambdaS.getMaximum() * 0.05) {
+				if (lambdaMultiplierChange > 0) {
+					if (lambdaMultiplierChange % 2 == 1) {
+						lambdaMultiplier /= 2;
+						setLambdaSlider();
+						lambdaS.setValue(lambdaS.getValue() * 2);
+					} else {
+						lambdaMultiplier /= 5;
+						setLambdaSlider();
+						lambdaS.setValue(lambdaS.getValue() * 5);
+					}
+					lambdaMultiplierChange--;
+				} else {
+					break;
+				}
+			} else {
+				break;
+			}
+		}
+	}
+
+	public void setSMultiplier() {
+		while (true) {
+			if (sS.getValue() > sS.getMaximum() * 0.95) {
+				if (sMultiplierChange <= 4) {
+					if (sMultiplierChange % 2 == 0) {
+						sMultiplier *= 2;
+						setSSlider();
+						sS.setValue((sS.getValue() + 1) / 2);
+					} else {
+						sMultiplier *= 5;
+						setSSlider();
+						sS.setValue((sS.getValue() + 1) / 5);
+					}
+					sMultiplierChange++;
+				} else {
+					break;
+				}
+			} else if (sS.getValue() < sS.getMaximum() * 0.05) {
+				if (sMultiplierChange > 0) {
+					if (sMultiplierChange % 2 == 1) {
+						sMultiplier /= 2;
+						setSSlider();
+						sS.setValue(sS.getValue() * 2);
+					} else {
+						sMultiplier /= 5;
+						setSSlider();
+						sS.setValue(sS.getValue() * 5);
+					}
+					sMultiplierChange--;
+				} else {
+					break;
+				}
+			} else {
+				break;
+			}
+		}
+	}
 
     /**
 	 * Update the menuBar for the Scheduling Window

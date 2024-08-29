@@ -138,7 +138,8 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     private final int startValueSlider = 50;
     private final String sliderArrival = "Avg. Arrival Rate (\u03BB): %.2f cust./s";
     private final String sliderService = "Avg. Service Time (S): %.2f s";
-    private final String sliderTraffic = "Avg. Utilization (U): ";
+    private final String sliderTraffic = "<html>Avg. Utilization <sub>per server</sub>: %.2f </html>";
+    private final String sliderTrafficSaturation = "<html>Avg. Utilization<sub>server</sub>: Saturation (%.2f) </html>";
     private int LAMBDA_I = 50;
     private int S_I = 95;
     private final DecimalFormat df = new DecimalFormat("#.##");
@@ -359,6 +360,13 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
             nserversPanel.add(new JLabel("N.servers:"));
             SpinnerNumberModel model = new SpinnerNumberModel(1,1,2,1);
             serversSpinner = new JSpinner(model);
+            serversSpinner.addChangeListener(new ChangeListener(){
+                @Override
+                public void stateChanged(ChangeEvent e) {
+                    updateFields();
+                }
+                
+            });
             nserversPanel.add(serversSpinner);
         }
 
@@ -416,7 +424,9 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         trafficIntensityPanel.add(avgServiceTimeLabel);
         createSSlider();
         trafficIntensityPanel.add(sS);
-        trafficIntensityLabel = new JLabel(sliderTraffic + df.format(lambdaS.getValue()*multiplierSlider * sS.getValue()*multiplierSlider));
+        S = sS.getValue()*multiplierSlider;
+        lambda = lambdaS.getValue()*multiplierSlider;
+        trafficIntensityLabel = new JLabel(String.format(sliderTraffic, S*lambda / (int)(serversSpinner.getValue())));
         trafficIntensityPanel.add(trafficIntensityLabel);
         //paramTrafficLabel = new JLabel(String.format(sliderFS, lambda, mhu));
         //trafficIntensityPanel.add(paramTrafficLabel);
@@ -584,14 +594,14 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 	}
 
     public void updateFields(){
-        double U = lambda * S;
+        double U = lambda * S / (int)(serversSpinner.getValue()); //Utilization per server
 
         if (U > 0 && U <= 1) { 
-            trafficIntensityLabel.setText(sliderTraffic + df.format(U));
+            trafficIntensityLabel.setText(String.format(sliderTraffic, S*lambda / (int)(serversSpinner.getValue())));
             trafficIntensityLabel.setForeground(Color.BLACK);
             createButton.setEnabled(true);
         } else {
-            trafficIntensityLabel.setText(sliderTraffic + "Saturation (" + df.format(U) + ")");
+            trafficIntensityLabel.setText(String.format(sliderTrafficSaturation, S*lambda / (int)(serversSpinner.getValue())));
             trafficIntensityLabel.setForeground(Color.RED);
             createButton.setEnabled(false);
         }   

@@ -29,6 +29,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
@@ -203,6 +204,12 @@ public class ResultsPanelScheduling extends ResultsPanel{
         Box introductionBox = Box.createHorizontalBox();
         JLabel label = new JLabel(Constants.INTRODUCTION_RESULTS);
         introductionBox.add(label);
+
+        introductionBox.add(Box.createHorizontalStrut(20));
+
+        statusResultsLabel = new JLabel(statusResults);
+        endResult();
+        introductionBox.add(statusResultsLabel);
  
         //----center part
         Box resultBox = Box.createVerticalBox();

@@ -184,8 +184,21 @@ public class MainWizard extends JMCHWizard{
 		this.validate();
 	}
 
+	public void setSelectedPanel(){
+		showPrev();
+	}
+
 	public int getNumbersPanel(){
 		return panelCollection.size();
+	}
+
+	/* Two methods for setting the icon of loading or end result. Called by the Animation Panel*/
+	public void setIconLoading(){
+		resultsPanel.loadingResult();
+	}
+
+	public void setIconFinish(){
+		resultsPanel.endResult();
 	}
 
 	/**

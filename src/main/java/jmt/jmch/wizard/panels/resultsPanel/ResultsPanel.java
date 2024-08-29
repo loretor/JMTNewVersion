@@ -17,8 +17,15 @@
  */
 package jmt.jmch.wizard.panels.resultsPanel;
 
+import java.awt.Dimension;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import jmt.framework.gui.help.HoverHelp;
 import jmt.framework.gui.wizard.WizardPanel;
+import jmt.gui.common.JMTImageLoader;
 import jmt.jmch.wizard.MainWizard;
 
 /**
@@ -36,6 +43,8 @@ public class ResultsPanel extends WizardPanel{
     //------------ components of the panel 
     protected MainWizard parent;
     protected HoverHelp help;
+	protected ImageIcon statusResults;
+	protected JLabel statusResultsLabel;
 
     public ResultsPanel(MainWizard main){
         this.parent = main;
@@ -80,4 +89,20 @@ public class ResultsPanel extends WizardPanel{
         
     }
 
+	/* Methods called by the Main Wizard to update the icon */
+	public void loadingResult(){
+		statusResults = JMTImageLoader.loadImage("loader");
+		statusResultsLabel.setIcon(statusResults);
+	}
+
+	public void endResult(){
+		statusResults = JMTImageLoader.loadImage("Measure_ok");
+		statusResultsLabel.setIcon(statusResults);
+	}
+
+	@Override
+    public boolean canGoBack() {
+		//parent.setSelectedPanel();
+		return true;	
+	}
 }

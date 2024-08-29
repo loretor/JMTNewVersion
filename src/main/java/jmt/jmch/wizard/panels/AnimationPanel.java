@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -39,6 +40,7 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -48,6 +50,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -59,8 +62,10 @@ import org.w3c.dom.events.MouseEvent;
 import jmt.framework.gui.components.JMTMenuBar;
 import jmt.framework.gui.components.JMTToolBar;
 import jmt.framework.gui.help.HoverHelp;
+import jmt.framework.gui.image.ImageLoader;
 import jmt.framework.gui.listeners.MenuAction;
 import jmt.framework.gui.wizard.WizardPanel;
+import jmt.gui.common.ImageLoaderImpl;
 import jmt.gui.common.JMTImageLoader;
 import jmt.gui.common.controller.DispatcherThread;
 import jmt.gui.common.definitions.GuiInterface;
@@ -579,7 +584,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
             trafficIntensityLabel.setForeground(Color.BLACK);
             createButton.setEnabled(true);
         } else {
-            trafficIntensityLabel.setText(sliderTraffic + "Saturation");
+            trafficIntensityLabel.setText(sliderTraffic + "Saturation (" + df.format(U) + ")");
             trafficIntensityLabel.setForeground(Color.RED);
             createButton.setEnabled(false);
         }   
@@ -768,6 +773,13 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
             }
         }
 
+        try{
+            parent.setIconLoading();
+        }
+        catch(Exception e){
+            showErrorMessage(e.getMessage());
+        }
+        
         getSimulationResults();
     }
 
@@ -879,12 +891,6 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         nextStep.setEnabled(false);
     }
 
-    public int showInfoMessage() {
-        Object[] options = {"Yes", "No"};
-        return JOptionPane.showOptionDialog(parent, Constants.PROMPT_SIMULATION_FINISHED[0], Constants.PROMPT_SIMULATION_FINISHED[1], JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
-    }
-
-
     //-----------------------------------------------------------------------
     //-------------------- all GUI Interface methods ------------------------
     //-----------------------------------------------------------------------
@@ -938,6 +944,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     //I opted for this solution since the progressionListener is not very well synchronized with the available data, it happened most of the times that the progression was 100% but there was no available data
     public void simulationFinished() { //called by dispatcher when the simulation is finished   
         MeasureDefinition results = solver.getModel().getSimulationResults();
+        parent.setIconFinish();
 
         parent.routeResults(solver.getQueueStrategy(), 
             solver.getInterArrivalDistribution(), 

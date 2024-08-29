@@ -292,7 +292,7 @@ public class Edge extends JComponent implements JobContainer{
 		newJob.setStartingPosition(points[0].x, points[0].y, getDirection(points[0], points[1]), 1); //when a new Job is added, then its position is the starting point of the edge
 		jobList.add(newJob);
 
-		if(nextEvent) { //do not stop for the next event if a job is passing from an edge to another
+		if(nextEvent && (prec instanceof Source)) { //stop only when a new job is created
 			animation.pause();
 			animation.resetNextEvent();
 		}

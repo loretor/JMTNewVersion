@@ -202,6 +202,12 @@ public class ResultsPanelRouting extends ResultsPanel{
         Box introductionBox = Box.createHorizontalBox();
         JLabel label = new JLabel(Constants.INTRODUCTION_RESULTS);
         introductionBox.add(label);
+
+        introductionBox.add(Box.createHorizontalStrut(20));
+
+        statusResultsLabel = new JLabel(statusResults);
+        endResult();
+        introductionBox.add(statusResultsLabel);
  
         //----center part
         Box resultBox = Box.createVerticalBox();

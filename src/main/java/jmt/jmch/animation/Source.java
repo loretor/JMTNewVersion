@@ -27,6 +27,7 @@ import java.awt.Point;
 import java.awt.geom.Arc2D;
 import java.util.Random;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -67,7 +68,6 @@ public class Source extends JComponent implements JobContainer{
 
 	private Color jobColor;
 	
-	
 	/**
      * Constructor
      * @param anim, AnimationClass associated to this component. It is needed in order to remove the job arrived to the sink also from the list of jobs of the AnimationClass
@@ -87,7 +87,7 @@ public class Source extends JComponent implements JobContainer{
 		this.service = service;
 		
 		jobColor = getRandomColor();
-		sourceImg = JMTImageLoader.loadImageAwt("Source");
+		sourceImg = JMTImageLoader.loadImageAwt("Source");		
 	}
 	
 	public void paint(Graphics g) {

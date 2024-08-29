@@ -59,6 +59,7 @@ public class Station extends JComponent implements JobContainer{
 	
 	//this is the queue of Jobs, see CustomCollection to understand why this and not a general Collection
 	private CustomCollection<Job> jobQueue; 
+	private int currentSizeQueue = 0;
 	private JobContainer next;
 	
 	//-- subcomponents of the station, the BoxStation, and the Circle
@@ -211,9 +212,13 @@ public class Station extends JComponent implements JobContainer{
 	
 	@Override
 	public void refresh() {		
+		boolean somethingHasChanged = false;
+		somethingHasChanged = currentSizeQueue != jobQueue.size(); //in case a new job is added to the station
+
 		if(jobQueue.size() >= 1) { //some jobs are waiting to enter inside the circles
 			for(int i = 0; i < nServers; i++) {
 				if(!circles[i].isWorking()) { //if the circle is not working than the head of the queue can go inside the circle
+					somethingHasChanged = true;
 					circles[i].addJob(this, (Job) jobQueue.first());
 					jobQueue.removeHead();
 					
@@ -250,6 +255,13 @@ public class Station extends JComponent implements JobContainer{
 				b.setProcessorSpeed(processorSpeed);
 				b.refresh();
 			}
+		}
+
+		currentSizeQueue = jobQueue.size();
+
+		if(somethingHasChanged && nextEvent){ //stop the simulation if the jobs inside the station moved
+			animation.pause();
+			animation.resetNextEvent();
 		}
 	}
 	
@@ -291,10 +303,8 @@ public class Station extends JComponent implements JobContainer{
 			jobQueue.addNew(newJob);
 		}	
 
-		if(nextEvent) {
+		if(nextEvent) { //refresh the component to stop the simulation, the stopping politic is then handled in the refresh method
 			refresh();
-			animation.pause();
-			animation.resetNextEvent();
 		}
 	}
 

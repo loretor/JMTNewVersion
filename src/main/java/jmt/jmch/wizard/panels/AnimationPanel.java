@@ -566,12 +566,19 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 			lambdaS.setValue(1);
 		}
 		lambda = lambdaMultiplier * lambdaS.getValue();
-		avgArrivalRateLabel.setText(String.format(sliderArrival, lambdaS.getValue() * lambdaMultiplier));
+		avgArrivalRateLabel.setText(String.format(sliderArrival, lambda));
 		setSSlider();
 		updateFields();
 	}
 
 	protected void sSStateChanged(ChangeEvent evt) {
+        if(sS.getValue() == 0){
+            sMultiplier = 0.01;
+            sMultiplierChange = 0;
+            sS.setValue(1);
+        }
+        S = sMultiplier * sS.getValue();
+        avgServiceTimeLabel.setText(String.format(sliderService, S));
 		setSSlider();
 		updateFields();
 	}

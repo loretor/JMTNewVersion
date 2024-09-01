@@ -26,6 +26,10 @@ package jmt.jmch;
  * Time: 13.40
  */
 public class Constants {
+    public static final int PANEL_MAIN = 0;
+    public static final int PANEL_ANIMATION = 1;
+    public static final int PANEL_RESULTS = 2;
+    public static final int PANEL_MARKOV = 1;
 
     //all the algorithms
     public static final String FCFS = "FCFS";

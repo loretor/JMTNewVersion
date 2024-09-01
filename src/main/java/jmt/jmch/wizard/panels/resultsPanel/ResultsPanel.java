@@ -26,7 +26,9 @@ import javax.swing.JOptionPane;
 import jmt.framework.gui.help.HoverHelp;
 import jmt.framework.gui.wizard.WizardPanel;
 import jmt.gui.common.JMTImageLoader;
+import jmt.jmch.Constants;
 import jmt.jmch.wizard.MainWizard;
+import jmt.jmch.wizard.panels.JMCHWizardPanel;
 
 /**
  * Panel for showing the results of the simulations.
@@ -37,7 +39,7 @@ import jmt.jmch.wizard.MainWizard;
  * Date: 15-jul-2024
  * Time: 10.53
  */
-public class ResultsPanel extends WizardPanel{
+public class ResultsPanel extends WizardPanel implements JMCHWizardPanel{
     private static final String PANEL_NAME = "Results";
 
     //------------ components of the panel 
@@ -105,4 +107,43 @@ public class ResultsPanel extends WizardPanel{
 		//parent.setSelectedPanel();
 		return true;	
 	}
+
+	@Override
+	public void openHelp() {
+
+	}
+
+	@Override
+	public void startAnimation() {
+	}
+
+	@Override
+	public void pauseAnimation() {
+	}
+
+	@Override
+	public void reloadAnimation() {
+	}
+
+	@Override
+	public void nextStepAnimation() {
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void stopAnimation() {
+	}
+
+	@Override
+    public void setLastPanel(){
+        parent.setLastPanel(Constants.PANEL_RESULTS);
+    }
+
+	@Override
+    public void lostFocus() { 
+        setLastPanel();
+    }
 }

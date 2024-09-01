@@ -118,11 +118,6 @@ public class MMQueuesPanel extends WizardPanel implements JMCHWizardPanel{
 
     @Override
     public boolean canGoBack() {
-		if (JOptionPane.showConfirmDialog(this, "Are you sure you want to go back to start screen?", "Back operation", JOptionPane.YES_NO_OPTION,
-				JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) {
-			return false;
-		}		
-		parent.resetScreen(); //remove this panel and go back to the intitial MainPanel
 		return true;
 	}
 
@@ -168,6 +163,16 @@ public class MMQueuesPanel extends WizardPanel implements JMCHWizardPanel{
         pause.setEnabled(false);
         stop.setEnabled(false);
         mq.stopBActionPerformed();
+    }
+
+    @Override
+    public void setLastPanel(){
+        parent.setLastPanel(Constants.PANEL_MARKOV);
+    }
+
+    @Override
+    public void lostFocus() { 
+        setLastPanel();
     }
 
 }

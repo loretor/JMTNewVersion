@@ -210,6 +210,9 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 
         algorithms = NonPreemptiveSimulation.getAlgorithms();
 
+        serversSpinner = new JSpinner();
+        serversSpinner.setValue(1); //by default, since in routing policts the server spinner is not present, but its value is used in the formulas of the U
+
         //define all the AbstractTeachAction
         exit = new Exit(this);
         start = new StartSimulation(this);
@@ -222,13 +225,13 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         start.setEnabled(false); //cannot start a simulation without setting the parameters
         nextStep.setEnabled(false);
         pause.setEnabled(false);
-        reload.setEnabled(false);
+        reload.setEnabled(false);    
     }
 
     public AnimationPanel(MainWizard main, Simulation sim){
         this(main);
         this.simulation = sim;   
-        initGUI();
+        initGUI();  
     }
 
     public void initGUI(){
@@ -752,11 +755,6 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 
     @Override
     public boolean canGoBack() {
-		if (JOptionPane.showConfirmDialog(this, "This operation resets all data. Are you sure you want to go back to start screen?", "Back operation", JOptionPane.YES_NO_OPTION,
-				JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) {
-			return false;
-		}		
-		parent.resetScreen(); //remove this panel and go back to the intitial MainPanel
 		return true;
 	}
 
@@ -899,6 +897,16 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     @Override
     public void exit(){
         parent.close();
+    }
+
+    @Override
+    public void setLastPanel(){
+        parent.setLastPanel(Constants.PANEL_ANIMATION);
+    }
+
+    @Override
+    public void lostFocus() { 
+        setLastPanel();
     }
 
     public void disableAllButtons(){

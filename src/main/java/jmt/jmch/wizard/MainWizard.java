@@ -20,6 +20,7 @@ package jmt.jmch.wizard;
 
 import jmt.gui.common.CommonConstants;
 import jmt.gui.common.JMTImageLoader;
+import jmt.gui.jwat.JWatWizard;
 import jmt.jmch.simulation.RoutingSimulation;
 import jmt.jmch.simulation.Simulation;
 import jmt.jmch.wizard.panels.AnimationPanel;
@@ -54,6 +55,7 @@ public class MainWizard extends JMCHWizard{
     private String IMG_JWATICON = "JMCHIcon";
     private static final String TITLE = "JMCH - Modelling Classroom Helper"; 
 	private static final String TITLE_QUEUEING = "Queueing";
+	private int lastPanel = 0; //this variable is used to set the focus on the last panel visited when going back to the main panel and answering NO to the "Are you sure..."
 
     //components of the panel
     private JPanel menus;
@@ -70,7 +72,7 @@ public class MainWizard extends JMCHWizard{
         this.setIconImage(JMTImageLoader.loadImage(IMG_JWATICON).getImage());
 		this.setTitle(TITLE);
 		this.setSize(CommonConstants.MAX_GUI_WIDTH_JWAT, CommonConstants.MAX_GUI_HEIGHT_JWAT);
-		this.setResizable(false);
+		this.setResizable(true);
 
         centerWindow();
 
@@ -181,6 +183,8 @@ public class MainWizard extends JMCHWizard{
 		this.setTitle(TITLE);
 		mainPanel.createMenu(); //update the menu and toolbar
 		mainPanel.createToolBar();
+		setEnableButton("Next >", false);
+		setEnableButton("Back", false);
 		this.validate();
 	}
 
@@ -221,6 +225,13 @@ public class MainWizard extends JMCHWizard{
 		else{
 			resultsPanel.addResult(algorithm, arrivalDistr, lambda, serviceDistr, nServers, service, responseTime, queueTime, thoughput, queueNumber);
 		}
-		
+	}
+
+	public void setLastPanel(int value){
+		lastPanel = value;
+	}
+
+	public void setLastPanel() {
+		tabbedPane.setSelectedIndex(lastPanel);
 	}
 }

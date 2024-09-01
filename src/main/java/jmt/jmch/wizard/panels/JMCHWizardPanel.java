@@ -49,4 +49,6 @@ public interface JMCHWizardPanel{
      * used in Markov Chain, but also in the Simulation Models in reverse mode (it's the simulation that decides when the animation has to be stopped and all the UI changes must be done) 
      */
     public void stopAnimation();
+
+    public void setLastPanel();
 }

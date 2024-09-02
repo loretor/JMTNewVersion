@@ -18,6 +18,7 @@
 
 package jmt.jmch.animation;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -104,12 +105,65 @@ public class MultipleQueueNetAnimation extends AnimationClass{
 		super.paint(g);
 		
 		source.paint(g);
-		router.paint(g);
 		sink.paint(g);
+
+		int quarterPanel = parent.getHeight() / 4;
+		stationList.get(0).setYPos(parent.getY()+ quarterPanel - stationList.get(0).getHeight()/2 - 20);
+		stationList.get(2).setYPos(parent.getY()+ quarterPanel*3 - stationList.get(0).getHeight()/2 + 20);
 		
-		for(Station st: stationList) {
+		int sixPanel = parent.getWidth() / 8;
+		for(Station st: stationList){
+			st.setXPos(sixPanel * 3);
 			st.paint(g);
-		}		
+		}
+
+		router.setXPos(sixPanel * 2);
+		router.paint(g);
+	
+		//update the vertices of the edges dinamically
+		int padding = 10;
+		edgeList.get(0).setXFinish(sink.getXPos() - padding);
+		int stationFinishX = (stationList.get(0).getXPos() + stationList.get(0).getTotalLenght());
+		int halfStationSink = (sink.getXPos() - stationFinishX)/2 + stationFinishX;
+		edgeList.get(0).setXStart(halfStationSink); //half the distance between the finish of the station and the begin of the sink
+
+		edgeList.get(1).setXStart(stationFinishX + padding);
+		edgeList.get(1).setXPoint(halfStationSink, 1);
+		edgeList.get(1).setXFinish(halfStationSink); 
+		edgeList.get(1).setYStart(stationList.get(0).getYPos() + stationList.get(0).getHeight()/2);
+		edgeList.get(1).setYPoint(stationList.get(0).getYPos() + stationList.get(0).getHeight()/2, 1);
+		edgeList.get(1).setYFinish(parent.getY() + parent.getHeight()/2);
+
+		edgeList.get(2).setXStart(stationList.get(1).getXPos() + stationList.get(1).getTotalLenght() + padding);
+		edgeList.get(2).setXFinish(halfStationSink);
+
+		edgeList.get(3).setXStart(stationFinishX + padding);
+		edgeList.get(3).setXPoint(halfStationSink, 1);
+		edgeList.get(3).setXFinish(halfStationSink); 
+		edgeList.get(3).setYStart(stationList.get(2).getYPos() + stationList.get(2).getHeight()/2);
+		edgeList.get(3).setYPoint(stationList.get(2).getYPos() + stationList.get(2).getHeight()/2, 1);
+		edgeList.get(3).setYFinish(parent.getY() + parent.getHeight()/2);
+
+		edgeList.get(4).setXStart(router.getXPos() + router.getTotalLenght()/2);
+		edgeList.get(4).setXPoint(router.getXPos() + router.getTotalLenght()/2, 1);
+		edgeList.get(4).setXFinish(stationList.get(0).getXPos() - padding); 
+		edgeList.get(4).setYStart(router.getYPos() - padding);
+		edgeList.get(4).setYPoint(stationList.get(0).getYPos() + stationList.get(0).getHeight()/2, 1);
+		edgeList.get(4).setYFinish(stationList.get(0).getYPos() + stationList.get(0).getHeight()/2);
+
+		edgeList.get(5).setXStart(router.getXPos() + router.getTotalLenght() + padding);
+		edgeList.get(5).setXFinish(stationList.get(1).getXPos() - padding);
+
+		edgeList.get(6).setXStart(router.getXPos() + router.getTotalLenght()/2);
+		edgeList.get(6).setXPoint(router.getXPos() + router.getTotalLenght()/2, 1);
+		edgeList.get(6).setXFinish(stationList.get(0).getXPos() - padding); 
+		edgeList.get(6).setYStart(router.getYPos() + router.getTotalLenght() + padding);
+		edgeList.get(6).setYPoint(stationList.get(2).getYPos() + stationList.get(2).getHeight()/2, 1);
+		edgeList.get(6).setYFinish(stationList.get(2).getYPos() + stationList.get(2).getHeight()/2);
+
+		edgeList.get(7).setXStart(source.getXPos() + source.getTotalLenght() + padding);
+		edgeList.get(7).setXFinish(router.getXPos() - padding);
+		
 		for(Edge e: edgeList) {
 			e.paint(g);
 		}

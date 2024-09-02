@@ -38,7 +38,7 @@ import jmt.jmch.simulation.Simulation;
  * Date: 02-apr-2024
  * Time: 10.10
  */
-public class Router extends JComponent implements JobContainer{
+public class Router extends JComponent implements JobContainer, GraphicComponent{
 	private JPanel parent; //panel in which the Station is drawn
 	
 	//general information about the station
@@ -218,6 +218,32 @@ public class Router extends JComponent implements JobContainer{
 		for(int i = 0; i < nextEdges.size(); i++) {
 			nextEdges.get(i).paintPercentage(percentages[i]);
 		}
+	}
+	//---------- Graphic Component methods
+
+	@Override
+	public void setXPos(int xpos) {
+		pos.x = xpos;
+	}
+
+	@Override
+	public void setYPos(int ypos) {
+		pos.y = ypos;
+	}
+
+	@Override
+	public int getXPos() {
+		return pos.x;
+	}
+
+	@Override
+	public int getYPos() {
+		return pos.y;
+	}
+
+	@Override
+	public int getTotalLenght() {
+		return size;
 	}
 	
 	

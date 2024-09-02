@@ -376,4 +376,20 @@ public class Edge extends JComponent implements JobContainer{
 	public void setXStart(int xpos) {
 		points[0].x = xpos;
 	}
+
+	public void setYFinish(int ypos) {
+		points[points.length - 1].y = ypos;
+	}
+	
+	public void setYStart(int ypos) {
+		points[0].y = ypos;
+	}
+
+	public void setYPoint(int ypos, int i) {
+		points[i].y = ypos;
+	}
+
+	public void setXPoint(int xpos, int i) {
+		points[i].x = xpos;
+	}
 }

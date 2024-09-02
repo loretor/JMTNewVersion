@@ -25,8 +25,12 @@ package jmt.jmch.animation;
  * Time: 14.00
  */
 public interface GraphicComponent {
+    public void setXPos(int xpos);
+    public void setYPos(int ypos);
+
     /** Return the drawing starting position in the panel of a component*/
     public int getXPos();
+    public int getYPos();
 
     /** Get the total length of a component when drawn */
     public int getTotalLenght();

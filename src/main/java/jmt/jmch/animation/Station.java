@@ -382,14 +382,32 @@ public class Station extends JComponent implements JobContainer, GraphicComponen
 		return simulation.getName() == Constants.PS;
 	}
 
+	
+
+	
+
 	//------- Graphic Component Methods
 	@Override
 	public int getXPos() {
 		return pos.x;
 	}
+
+	@Override
+	public int getYPos(){
+		return pos.y;
+	}
 	
 	@Override
 	public int getTotalLenght() {
 		return length + length/2;
+	}
+
+	@Override
+	public void setYPos(int yPos){
+		pos.y = yPos;
+	}
+	@Override
+	public void setXPos(int xPos){
+		pos.x = xPos;
 	}
 }

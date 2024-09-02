@@ -212,7 +212,21 @@ public class Source extends JComponent implements JobContainer, GraphicComponent
 	}
 
 	@Override
+	public int getYPos() {
+		return pos.y;
+	}
+
+	@Override
 	public int getTotalLenght() {
-		return pos.x + size;
+		return size;
+	}
+
+	@Override
+	public void setYPos(int yPos){
+		pos.y = yPos;
+	}
+	@Override
+	public void setXPos(int xPos){
+		pos.x = xPos;
 	}
 }

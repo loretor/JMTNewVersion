@@ -42,7 +42,7 @@ import jmt.jmch.distributions.AnimDistribution;
  * Date: 31-mar-2024
  * Time: 11.30
  */
-public class Source extends JComponent implements JobContainer{
+public class Source extends JComponent implements JobContainer, GraphicComponent{
 	private JPanel parent;
 	private Point pos;
 	private JobContainer next;
@@ -202,5 +202,17 @@ public class Source extends JComponent implements JobContainer{
 
 	public void setVelocityFactor(int value) {
 		velocityFactor = value;
-	}	
+	}
+	
+	
+	//----- Graphic component Methods
+	@Override
+	public int getXPos() {
+		return pos.x;
+	}
+
+	@Override
+	public int getTotalLenght() {
+		return pos.x + size;
+	}
 }

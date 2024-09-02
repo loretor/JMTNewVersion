@@ -68,7 +68,7 @@ public class SingleQueueNetAnimation extends AnimationClass{
 		jobList = new ArrayList<>(); //do not move in the super class, since each time I have to reload the simulation, this method is called
 		
 		sink = new Sink(container, true, new Point(0,0), this);
-		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(450,0), new Point(590,0)}, 2, sink));
+		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(450,0), new Point(sink.getPositionX() - 10 ,0)}, 2, sink));
 		station = new Station(this, container, true, true, new Point(0,0), edgeList.get(0), simulation, nServers);
 		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(80,0), new Point(230,0)}, 2, station));
 		source = new Source(this, container, true, new Point(0,0), edgeList.get(edgeList.size()-1), interArrival, service);
@@ -83,16 +83,24 @@ public class SingleQueueNetAnimation extends AnimationClass{
 	public void paint(Graphics g) {
 		super.paint(g);
 		
+		sink.paint(g);
 		source.paint(g);
 		station.paint(g);
-		sink.paint(g);
+		
+		int padding = 10;
+		//modify the position of the start and finish points of the edges based on the position of sink, source and station
+		edgeList.get(0).setXFinish(sink.getXPos() - padding);
+		edgeList.get(0).setXStart(station.getXPos() + station.getTotalLenght() + padding);
+		
+		edgeList.get(1).setXFinish(station.getXPos() - padding);
+		edgeList.get(1).setXStart(source.getXPos() + source.getTotalLenght());
 		
 		for(Edge e: edgeList) {
 			e.paint(g);
 		}
 		for(Job j: jobList) {
 			j.paint(g);
-		}
+		}	
 	}
 	
 	@Override

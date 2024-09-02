@@ -15,24 +15,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
-
 package jmt.jmch.animation;
 
 /**
- * Interface for representing all the Components of an Animation.
- * Each component that can handle jobs like edges, station, routers... must implement this Interface.
+ * Interface to wrap up all the methods for a graphic component
  *
  * @author Lorenzo Torri
- * Date: 26-mar-2024
- * Time: 14.20
+ * Date: 02-sept-2024
+ * Time: 14.00
  */
-public interface JobContainer {
-	
-	public void refresh();
-	
-	/**
-	 * Add a new Job to this JobContainer
-	 * @param newJob Job to add to this Container
-	 */
-	public void addJob(JobContainer prev, Job newJob);
+public interface GraphicComponent {
+    /** Return the drawing starting position in the panel of a component*/
+    public int getXPos();
+
+    /** Get the total length of a component when drawn */
+    public int getTotalLenght();
 }

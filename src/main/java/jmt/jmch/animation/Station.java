@@ -43,7 +43,7 @@ import jmt.jmch.simulation.Simulation;
  * Date: 11-mar-2024
  * Time: 16.29
  */
-public class Station extends JComponent implements JobContainer{
+public class Station extends JComponent implements JobContainer, GraphicComponent{
 	private JPanel parent; //panel in which the Station is drawn
 	private AnimationClass animation;
 	
@@ -382,4 +382,14 @@ public class Station extends JComponent implements JobContainer{
 		return simulation.getName() == Constants.PS;
 	}
 
+	//------- Graphic Component Methods
+	@Override
+	public int getXPos() {
+		return pos.x;
+	}
+	
+	@Override
+	public int getTotalLenght() {
+		return length + length/2;
+	}
 }

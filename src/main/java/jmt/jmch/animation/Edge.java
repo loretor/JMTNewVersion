@@ -367,6 +367,13 @@ public class Edge extends JComponent implements JobContainer{
 			highlight = !highlight;
 			counterHighLight++;
 		}
-		
+	}
+
+	public void setXFinish(int xpos) {
+		points[points.length - 1].x = xpos;
+	}
+	
+	public void setXStart(int xpos) {
+		points[0].x = xpos;
 	}
 }

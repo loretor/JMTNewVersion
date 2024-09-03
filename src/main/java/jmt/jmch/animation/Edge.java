@@ -160,13 +160,13 @@ public class Edge extends JComponent implements JobContainer{
 		if(paintPercentage) {
 			g.setFont(new Font("Arial", Font.PLAIN, 10));
 			DecimalFormat df = new DecimalFormat("#.##");
-			String value = "prob: "+ df.format(percentage);
+			String value = "p: "+ df.format(percentage);
 			Direction direction = getDirection(points[0], points[1]);
 			if(direction == Direction.UP || direction == Direction.DOWN) {
-				g.drawString(value, points[0].x - 50,  points[0].y + direction.direction() * 20);
+				g.drawString(value, points[0].x - 40,  points[0].y + direction.direction() * 15);
 			}
 			else {
-				g.drawString(value, points[0].x,  points[0].y + direction.direction() * 20);
+				g.drawString(value, points[0].x - 10,  points[0].y + direction.direction() * 22);
 			}
 		}
 
@@ -369,6 +369,7 @@ public class Edge extends JComponent implements JobContainer{
 		}
 	}
 
+	//---- Graphic Component Methods
 	public void setXFinish(int xpos) {
 		points[points.length - 1].x = xpos;
 	}

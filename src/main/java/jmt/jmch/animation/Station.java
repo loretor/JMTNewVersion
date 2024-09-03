@@ -197,7 +197,7 @@ public class Station extends JComponent implements JobContainer, GraphicComponen
         if(paintQueueSize) {
         	g.setColor(Color.BLACK);
         	g.setFont(new Font("Arial", Font.PLAIN, 10));
-        	g.drawString("Queue Size: "+String.valueOf(jobQueue.size()), pos.x,  pos.y-20);
+        	g.drawString("Queue Size: "+String.valueOf(jobQueue.size()), pos.x,  pos.y-10);
         }
 
 		if(simulation.getName() == Constants.PS){ //if processor sharing, then print the processorSpeed

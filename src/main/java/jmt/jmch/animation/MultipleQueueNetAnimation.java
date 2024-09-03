@@ -111,13 +111,12 @@ public class MultipleQueueNetAnimation extends AnimationClass{
 		stationList.get(0).setYPos(parent.getY()+ quarterPanel - stationList.get(0).getHeight()/2 - 20);
 		stationList.get(2).setYPos(parent.getY()+ quarterPanel*3 - stationList.get(0).getHeight()/2 + 20);
 		
-		int sixPanel = parent.getWidth() / 8;
 		for(Station st: stationList){
-			st.setXPos(sixPanel * 3);
+			st.setXPos(parent.getWidth() * 19/50);
 			st.paint(g);
 		}
 
-		router.setXPos(sixPanel * 2);
+		router.setXPos(parent.getWidth() * 11/50);
 		router.paint(g);
 	
 		//update the vertices of the edges dinamically

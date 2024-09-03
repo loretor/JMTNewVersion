@@ -93,7 +93,7 @@ public class SingleQueueNetAnimation extends AnimationClass{
 		edgeList.get(0).setXStart(station.getXPos() + station.getTotalLenght() + padding);
 		
 		edgeList.get(1).setXFinish(station.getXPos() - padding);
-		edgeList.get(1).setXStart(source.getXPos() + source.getTotalLenght());
+		edgeList.get(1).setXStart(source.getXPos() + source.getTotalLenght() + padding);
 		
 		for(Edge e: edgeList) {
 			e.paint(g);

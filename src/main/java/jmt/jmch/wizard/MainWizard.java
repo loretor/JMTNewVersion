@@ -104,7 +104,7 @@ public class MainWizard extends JMCHWizard{
 	public void setAnimationPanelEnv(Simulation simulation){
 		this.sim = simulation;
 		this.setTitle(TITLE + " - "+ TITLE_QUEUEING + ", "+simulation.getType().toString());
-
+		
 		animationPanel = new AnimationPanel(this, simulation);
 		this.addPanel(animationPanel);
 		panelCollection.add(animationPanel);

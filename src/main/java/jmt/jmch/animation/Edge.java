@@ -334,6 +334,14 @@ public class Edge extends JComponent implements JobContainer{
     	velocityFactor = value;
     }
 
+	public double getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(double sp){
+		speed = sp;
+	}
+
 	public void resetVelocityFactor() {
     	speed /= velocityFactor;
     	velocityFactor = 1;
@@ -369,7 +377,14 @@ public class Edge extends JComponent implements JobContainer{
 		}
 	}
 
-	//---- Graphic Component Methods
+	public int getTotalLength(){
+		int sum = 0;
+		for(int i = 1; i < points.length; i++){
+			sum += Math.abs(points[i].y - points[i-1].y) + Math.abs(points[i].x - points[i-1].x); //Manhattan distance
+		}
+		return sum;
+	}
+
 	public void setXFinish(int xpos) {
 		points[points.length - 1].x = xpos;
 	}

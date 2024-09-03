@@ -41,6 +41,10 @@ import jmt.jmch.wizard.panels.AnimationPanel;
 public class MultipleQueueNetAnimation extends AnimationClass{
 	private AnimationPanel animPanel;
 	private JPanel parent;
+
+	//-- characteristics of the main panel
+	private int panelWidth = 0;
+	private int panelHeight = 0;
 	
 	//-- all the classes contained in the Animation, like stations, edges...
 	private Source source;
@@ -86,7 +90,7 @@ public class MultipleQueueNetAnimation extends AnimationClass{
 		
 		//3 edges from router to stations
 		edgeList.add(new Edge(this, container, false, true, new Point[] {new Point(180,235 - 30), new Point(180, 75+30), new Point(280,75+30)}, 2, stationList.get(0)));
-		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(210,0), new Point(280,0)}, 2/2.75, stationList.get(1))); //the value of the speed is 2/2.75 because it comes from some calculations to have the same time to traverse this edge and the other two
+		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(210,0), new Point(280,0)}, 2, stationList.get(1))); //the value of the speed is 2/2.75 because it comes from some calculations to have the same time to traverse this edge and the other two
 		edgeList.add(new Edge(this, container, false, true, new Point[] { new Point(180,235 + 30), new Point(180, 340+30), new Point(280,340+30)}, 2, stationList.get(2)));
 				
 		//create the two Lists for the router
@@ -97,7 +101,9 @@ public class MultipleQueueNetAnimation extends AnimationClass{
 		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(80,0), new Point(150,0)}, 2, router));
 		
 		source = new Source(this, container, true, new Point(10,0), edgeList.get(edgeList.size()-1), interArrival, service);
-		
+
+		panelHeight = 0;
+		panelWidth = 0;
 	}
 	
 	@Override
@@ -107,18 +113,58 @@ public class MultipleQueueNetAnimation extends AnimationClass{
 		source.paint(g);
 		sink.paint(g);
 
-		int quarterPanel = parent.getHeight() / 4;
-		stationList.get(0).setYPos(parent.getY()+ quarterPanel - stationList.get(0).getHeight()/2 - 20);
-		stationList.get(2).setYPos(parent.getY()+ quarterPanel*3 - stationList.get(0).getHeight()/2 + 20);
-		
-		for(Station st: stationList){
-			st.setXPos(parent.getWidth() * 19/50);
-			st.paint(g);
-		}
+		int currentPanelHeight = parent.getHeight();
+		int currentPanelWidth = parent.getWidth();
 
-		router.setXPos(parent.getWidth() * 11/50);
-		router.paint(g);
-	
+		if(currentPanelHeight != panelHeight || currentPanelWidth != panelWidth){ //the window has changed size, or it's the first time the paint method is called
+			//this part is used to support dynamic changes of the size of the window (and also for different screen resolutions)
+			int quarterPanel = parent.getHeight() / 4;
+			stationList.get(0).setYPos(parent.getY()+ quarterPanel - stationList.get(0).getHeight()/2 - 20);
+			stationList.get(2).setYPos(parent.getY()+ quarterPanel*3 - stationList.get(0).getHeight()/2 + 20);
+			
+			for(Station st: stationList){
+				st.setXPos(parent.getWidth() * 19/50);
+				st.paint(g);
+			}
+
+			router.setXPos(parent.getWidth() * 11/50);
+			router.paint(g);
+		
+			updateEdgesPosition();
+			updateVelocityEdges();
+
+			panelHeight = currentPanelHeight;
+			panelWidth = currentPanelWidth;
+		}
+		else{
+			for(Station st: stationList){
+				st.paint(g);
+			}
+			router.paint(g);
+		}	
+		
+		for(Edge e: edgeList) {
+			e.paint(g);
+		}
+		for(Job j: jobList) {
+			j.paint(g);
+		}
+	}
+
+	/** Update the velocity of the three edges from the router to the stations */
+	private void updateVelocityEdges(){
+		int lFirstEdge = edgeList.get(4).getTotalLength();
+		int lSecondEdge = edgeList.get(5).getTotalLength();
+		double sFirstEdge = edgeList.get(4).getSpeed();
+
+		double time = lFirstEdge / sFirstEdge; //time must be equal for all the edges
+
+		double sSecondEdge = lSecondEdge / time;
+		edgeList.get(5).setSpeed(sSecondEdge);
+	}
+
+	/** Update the position of the vertices of the edges based on the size of the window */
+	private void updateEdgesPosition(){
 		//update the vertices of the edges dinamically
 		int padding = 10;
 		edgeList.get(0).setXFinish(sink.getXPos() - padding);
@@ -162,13 +208,6 @@ public class MultipleQueueNetAnimation extends AnimationClass{
 
 		edgeList.get(7).setXStart(source.getXPos() + source.getTotalLenght() + padding);
 		edgeList.get(7).setXFinish(router.getXPos() - padding);
-		
-		for(Edge e: edgeList) {
-			e.paint(g);
-		}
-		for(Job j: jobList) {
-			j.paint(g);
-		}
 	}
 
 	@Override

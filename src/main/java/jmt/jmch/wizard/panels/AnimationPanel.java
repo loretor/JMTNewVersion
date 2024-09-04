@@ -47,6 +47,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -109,6 +110,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     //------------ components of the panel -----------------------
     private MainWizard parent;
     private JPanel mainPanel;
+    private JPanel leftPanel;
     private JLabel descrLabel;
     private JComboBox<String> algorithmJComboBox = null;
     private JComboBox<String> interAComboBox;
@@ -254,7 +256,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         mainPanel.setLayout(new BorderLayout());
 
         //divide the main panels in three columns
-        JPanel leftPanel = new JPanel();
+        leftPanel = new JPanel();
         leftPanel.setMaximumSize(new Dimension(275, mainPanel.getHeight()));
         leftPanel.setPreferredSize(new Dimension(275, mainPanel.getHeight()));
         mainPanel.add(leftPanel, BorderLayout.WEST);
@@ -275,6 +277,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 
         //description of the policy
         JPanel descrPanel = new JPanel(new BorderLayout());
+        descrPanel.setPreferredSize(new Dimension(leftPanel.getWidth(), 120));
         descrLabel = new JLabel();
         if(simulation.getType() == SimulationType.ROUTING || simulation.getType() == SimulationType.PROCESSOR_SHARING){ 
             descrLabel.setText("<html><body><p style='text-align:justify;'><font size=\"3\">"+simulation.getDescription()+"</p></body></html>");
@@ -282,12 +285,16 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         else{ //only in the case of preemptive or non preemptive no description at the beginning
             descrLabel.setText(Constants.NO_DESCRIPTION);
         }
-        descrPanel.add(descrLabel, BorderLayout.CENTER);
+        descrPanel.add(descrLabel, BorderLayout.NORTH);
         leftPanel.add(descrPanel, BorderLayout.NORTH);
 
         //paramters panel
-        createParameters(leftPanel);;
-        leftPanel.add(parametersPanel, BorderLayout.SOUTH);
+        createParameters(leftPanel);
+        JScrollPane scrollPane = new JScrollPane(parametersPanel);
+        scrollPane.setBorder(new TitledBorder(new EtchedBorder(), "Parameters"));
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        parametersPanel.setPreferredSize(new Dimension(leftPanel.getWidth(), parametersPanel.getPreferredSize().height));
+        leftPanel.add(scrollPane, BorderLayout.CENTER);
 
         //------------------RIGHT PART
         //rightPanel.setBorder(BorderFactory.createEmptyBorder(0,0,0,0)); //handle padding correctly, since it seems to move all the objects of the animation in one direction
@@ -332,14 +339,14 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
      */
     private void createParameters(JPanel container){
         parametersPanel = new JPanel();
-        parametersPanel.setBorder(new TitledBorder(new EtchedBorder(), "Parameters"));
         parametersPanel.setLayout(new BoxLayout(parametersPanel, BoxLayout.Y_AXIS));
+        int heightPanels = 25;
 
         EmptyBorder paddingBorder = new EmptyBorder(0, 10, 0, 10); //padding right and left for all the panels inside the JPanel (top and bottom = 0 otherwise it does not show other panels)
         
         //algorithm Panel (this one is displayed only for Scheduling Policies)
         if(simulation.getType() == SimulationType.NON_PREEMPTIVE || simulation.getType() == SimulationType.PREEMPTIVE){
-            JPanel algorithmPanel = createPanel(paddingBorder, false, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[0]);
+            JPanel algorithmPanel = createPanel(paddingBorder, false, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[0], heightPanels);
             algorithmPanel.setLayout(new GridLayout(1,2));
             algorithmPanel.add(new JLabel("Algorithm :"));
 
@@ -358,7 +365,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 
         //N servers panel (this one is displayed only for Scheduling Policies or Srocessor Sharing)
         if(simulation.getType() == SimulationType.NON_PREEMPTIVE || simulation.getType() == SimulationType.PREEMPTIVE || simulation.getType() == SimulationType.PROCESSOR_SHARING){
-            JPanel nserversPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[1]);
+            JPanel nserversPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[1], heightPanels);
             nserversPanel.setLayout(new GridLayout(1,2));
             nserversPanel.add(new JLabel("N.servers:"));
             SpinnerNumberModel model = new SpinnerNumberModel(1,1,2,1);
@@ -375,7 +382,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 
         //probability panel (displayed only for probabilistic routing)
         if(simulation.getType() == SimulationType.ROUTING && simulation.getName() == Constants.PROBABILISTIC){
-            JPanel probabilitiesPanel = createPanel(paddingBorder, false, spaceBetweenPanels, Constants.HELP_PROBABILITIES);
+            JPanel probabilitiesPanel = createPanel(paddingBorder, false, spaceBetweenPanels, Constants.HELP_PROBABILITIES, 50);
             //probabilitiesPanel.setBorder(new TitledBorder(new EtchedBorder(), "Probabilities"));
             probabilitiesPanel.setLayout(new BoxLayout(probabilitiesPanel, BoxLayout.Y_AXIS));
 
@@ -401,7 +408,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         }
 
         //Inter arrival time panel
-        JPanel interAPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[2]);
+        JPanel interAPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[2], heightPanels);
         interAPanel.setLayout(new GridLayout(1,2));
         interAPanel.add(new JLabel("Inter Arrival Time:"));
         interAComboBox = new JComboBox<String>(distributions);
@@ -409,7 +416,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         parametersPanel.add(interAPanel);
 
         //Service Time panel
-        JPanel serviceTPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[3]);
+        JPanel serviceTPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[3], heightPanels);
         serviceTPanel.setLayout(new GridLayout(1,2));
         serviceTPanel.add(new JLabel("Service Time:"));
         serviceComboBox = new JComboBox<String>(distributions);
@@ -417,7 +424,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         parametersPanel.add(serviceTPanel);
 
         //Slider panel
-        JPanel trafficIntensityPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[4]);
+        JPanel trafficIntensityPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[4], 160);
         trafficIntensityPanel.setLayout(new GridLayout(5,1));
         avgArrivalRateLabel = new JLabel(String.format(sliderArrival, startValueSlider * multiplierSlider));
         trafficIntensityPanel.add(avgArrivalRateLabel);
@@ -438,7 +445,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         parametersPanel.add(trafficIntensityPanel);
         
         //Simulation Duration
-        JPanel simulationDuration = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[5]);
+        JPanel simulationDuration = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[5], heightPanels);
         simulationDuration.setLayout(new GridLayout(1,2));
         simulationDuration.add(new JLabel("Max n. of samples:"));
         maxSamples = new JSpinner(new SpinnerNumberModel(10000000, 100000, Integer.MAX_VALUE, 50000));   
@@ -447,7 +454,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 
         //create button
         paddingBorder = new EmptyBorder(0,80,0,80);
-        JPanel createPanel = createPanel(paddingBorder, true, spaceBetweenPanels*2, Constants.HELP_PARAMETERS_PANELS[6]);
+        JPanel createPanel = createPanel(paddingBorder, true, spaceBetweenPanels*2, Constants.HELP_PARAMETERS_PANELS[6], heightPanels);
         createPanel.setLayout(new BorderLayout());
         createButton = new JButton(CREATE);
         help.addHelp(createButton, Constants.HELP_PARAMETERS_PANELS[4]);
@@ -461,14 +468,16 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
      * @param padding boolean if it is needed to add a padding over the panel (the first panel does not need the padding)
      * @param space how much padding with the upper panel
      * @param helpText the string to be displayed on the bottom of the JDialog
+     * @param setMaxSpace max height for each panel
      * @return a new Panel
      */
-    private JPanel createPanel(EmptyBorder paddingBorder, boolean padding, int space, String helpText) {
+    private JPanel createPanel(EmptyBorder paddingBorder, boolean padding, int space, String helpText, int setMaxSpace) {
         if(padding){
             parametersPanel.add(Box.createVerticalStrut(space));
         }
         JPanel p = new JPanel();  
         p.setBorder(paddingBorder);
+        p.setMaximumSize(new Dimension(Integer.MAX_VALUE, setMaxSpace));
         parametersPanel.add(p);
         help.addHelp(p, helpText);
         return p;

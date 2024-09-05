@@ -63,26 +63,22 @@ public class Constants {
     public static final String JSQ_DESCRIPTION =
         "The JSQ (Join the Shortest Job Queue) routing policy is a routing algorithm to distribute jobs as they arrive at the router. Jobs are routed to the station connected to the router that has the smallest number of customers in its queue.";
     
-    //introduction AnimationPanel
-    public static final String INTRODUCTION_SIMULATION = "<html><body>"
-        + "<p style='text-align:justify;'>"
-        //+ "<font size=\"4\"><b>Simulation</b></font><br>"
-        + "<font size=\"3\">In this panel it is possible to simulate the behavior of a scheduling algorithm of a queue station or a routing algorithm.<br> "
-        + "Set the Parameters and then click the <i>Create</i> button. The simulation will start, the obtained metrics will be displayed in the <i>Results</i> panel. </font>"
-        + "</p></body></html>";
+    static final String HTML_START = "<html><body><p style='text-align:justify;'>";
+    static final String HTML_END = "</p></body></html>";
+    static final String HTML_FONT_TITLE = "<font size=\"4\"><b>";
+    static final String HTML_FONT_TIT_END = "</b></font><br>";
+    static final String HTML_FONT_NORM = "<font size=\"3\">";
+    static final String HTML_FONT_NOR_END = "</font>";
 
-    public static final String NO_DESCRIPTION = "<html><body>"
-        + "<p style='text-align:justify;'>"
-        + "<font size=\"3\"> <i>No description, set parameters first</i>"
-        + "</p></body></html>";
+    //introduction AnimationPanel
+    public static final String INTRODUCTION_SIMULATION = HTML_START + HTML_FONT_TITLE + "Simulation" + HTML_FONT_TIT_END
+        + HTML_FONT_NORM + "In this panel it is possible to simulate the behavior of a scheduling algorithm of a queue station or a routing algorithm.<br> "
+        + "Set the Parameters and then click the <i>Create</i> button. The simulation will start, the obtained metrics will be displayed in the <i>Results</i> panel." + HTML_FONT_NOR_END + HTML_END;
 
     //introduction ResultsPanel
-    public static final String INTRODUCTION_RESULTS = "<html><body>"
-        + "<p style='text-align:justify;'>"
-        //+ "<font size=\"4\"><b>Simulation Results</b></font><br>"
-        + "<font size=\"3\"> In this panel the results of the simulations are shown according to the sequence of the executions. <br>"
-        + "Note that returning to the <i>Main Panel</i> will result in the loss of all data in the table. </font>"
-        + "</p></body></html>";
+    public static final String INTRODUCTION_RESULTS = HTML_START + HTML_FONT_TITLE + "Simulation Results" + HTML_FONT_TIT_END
+        + HTML_FONT_NORM + "In this panel the results of the simulations are shown according to the sequence of the executions. <br> "
+        + "Note that returning to the <i>Main Panel</i> will result in the loss of all data in the table." + HTML_FONT_NOR_END + HTML_END;
     
     //tooltips of the MainPanel
     public static final String[] PREEMPTIVE_TOOLTIPS = {

@@ -33,6 +33,7 @@ import jmt.jmch.wizard.panels.resultsPanel.ResultsPanelScheduling;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JMenuBar;
@@ -65,8 +66,10 @@ public class MainWizard extends JMCHWizard{
 	private List<WizardPanel> panelCollection = new ArrayList<>();
 	private AnimationPanel animationPanel;
 	private Simulation sim;
-	private ResultsPanel resultsPanel;
-	
+	private ResultsPanel resultsPanel = null;
+
+	//results information
+	private ResultStructure rs;
     
 	public MainWizard() {
         this.setIconImage(JMTImageLoader.loadImage(IMG_JWATICON).getImage());
@@ -110,7 +113,15 @@ public class MainWizard extends JMCHWizard{
 		panelCollection.add(animationPanel);
 
 		if(simulation instanceof RoutingSimulation){
-			resultsPanel = new ResultsPanelRouting(this);
+			//decide if the results stored in this class should be forwarded to the new resultsPanel
+			if(resultsPanel != null && resultsPanel instanceof ResultsPanelRouting){ //send old results only if previous simulation was stil a routing one
+				resultsPanel = new ResultsPanelRouting(this);
+				resultsPanel.setResults(rs.algorithms, rs.arrivalDistibutions, rs.lambdas, rs.serviceDistributions, rs.queuesNumber, rs.services, rs.responseTimes, rs.queueTimes, rs.thoughputs, rs.nCustomers);
+			}
+			else{
+				resultsPanel = new ResultsPanelRouting(this);
+			}
+			
 		}
 		else{
 			resultsPanel = new ResultsPanelScheduling(this);
@@ -205,6 +216,23 @@ public class MainWizard extends JMCHWizard{
 		resultsPanel.endResult();
 	}
 
+	/** Save the results of the Results Panel, and display them in the next chosen simulation, if the type is the same */
+	public void saveResults(){
+		rs = new ResultStructure();
+		rs.setAll(
+			resultsPanel.getAlgorithms(), 
+			resultsPanel.getArrivalDistirbutions(), 
+			resultsPanel.getLambdas(), 
+			resultsPanel.getServiceDistributions(), 
+			resultsPanel.getNservers(),
+			resultsPanel.getNQueues(), 
+			resultsPanel.getServiceTimes(), 
+			resultsPanel.getResponseTimes(), 
+			resultsPanel.getQueueTimes(), 
+			resultsPanel.getThroughputs(), 
+			resultsPanel.getNumberOfCustomers());
+	}
+
 	/**
 	 * Method called by the AnimationPanel to update the Result Panel
 	 * @param algorithm queue algorithm of the animation
@@ -233,5 +261,46 @@ public class MainWizard extends JMCHWizard{
 
 	public void setLastPanel() {
 		tabbedPane.setSelectedIndex(lastPanel);
+	}
+}
+
+class ResultStructure{
+	protected String[] algorithms;
+    protected String[] arrivalDistibutions;
+    protected double[] lambdas;
+    protected String[] serviceDistributions;
+	protected int[] serversNumber;
+    protected int[] queuesNumber;
+    protected double[] services;
+    protected double[] responseTimes;
+    protected double[] queueTimes;
+    protected double[] thoughputs;
+    protected double[] nCustomers;
+
+	public ResultStructure(){
+		algorithms = new String[0];
+		arrivalDistibutions = new String[0];
+		lambdas = new double[0];
+		serviceDistributions = new String[0];
+		queuesNumber = new int[0];
+		services = new double[0];
+		responseTimes = new double[0];
+		queueTimes = new double[0];
+		thoughputs = new double[0];
+		nCustomers = new double[0];
+	}
+
+	public void setAll(String[] algo, String[] arrivalD, double[] lamb, String[] serviceD, int[] nServers, int[] queueN, double[] S, double[] R, double[] Q, double[] X, double[] N){
+		algorithms = Arrays.copyOf(algo, algo.length);
+		arrivalDistibutions = Arrays.copyOf(arrivalD, arrivalD.length);
+		lambdas = Arrays.copyOf(lamb, lamb.length);
+		serviceDistributions = Arrays.copyOf(serviceD, serviceD.length);
+		serversNumber = Arrays.copyOf(nServers, nServers.length);
+		queuesNumber = Arrays.copyOf(queueN, queueN.length);
+		services = Arrays.copyOf(S, S.length);
+		responseTimes = Arrays.copyOf(R, R.length);
+		queueTimes = Arrays.copyOf(Q, Q.length);
+		thoughputs = Arrays.copyOf(X, X.length);
+		nCustomers = Arrays.copyOf(N, N.length);
 	}
 }

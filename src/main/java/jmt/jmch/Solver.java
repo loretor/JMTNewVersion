@@ -278,8 +278,8 @@ public class Solver implements CommonConstants{
     }
 
     //--------------- methods to get some parameters of the simulation --------------------
-    public String getQueueStrategy(){
-        return model.getQueueStrategy(model.getStationKeys().get(0), classKey);
+    public String getStrategy(){
+        return simulation.getName();
     }
 
     public String getInterArrivalDistribution(){
@@ -296,5 +296,5 @@ public class Solver implements CommonConstants{
 
     public int getNumberServers(){  
         return servers;
-    }    
+    }   
 }

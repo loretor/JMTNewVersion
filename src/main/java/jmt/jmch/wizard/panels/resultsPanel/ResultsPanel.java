@@ -17,11 +17,9 @@
  */
 package jmt.jmch.wizard.panels.resultsPanel;
 
-import java.awt.Dimension;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import jmt.framework.gui.help.HoverHelp;
 import jmt.framework.gui.wizard.WizardPanel;
@@ -47,6 +45,19 @@ public class ResultsPanel extends WizardPanel implements JMCHWizardPanel{
     protected HoverHelp help;
 	protected ImageIcon statusResults;
 	protected JLabel statusResultsLabel;
+
+	//for each column, an array of values
+    protected String[] algorithms = new String[0];
+    protected String[] arrivalDistibutions = new String[0];
+    protected double[] lambdas = new double[0];
+    protected String[] serviceDistributions = new String[0];
+	protected int[] serversNumber = new int[0];
+    protected int[] queuesNumber = new int[0];
+    protected double[] services = new double[0];
+    protected double[] responseTimes = new double[0];
+    protected double[] queueTimes = new double[0];
+    protected double[] thoughputs = new double[0];
+    protected double[] nCustomers = new double[0];
 
     public ResultsPanel(MainWizard main){
         this.parent = main;
@@ -102,6 +113,13 @@ public class ResultsPanel extends WizardPanel implements JMCHWizardPanel{
 		statusResultsLabel.setIcon(statusResults);
 	}
 
+	/** Sets the results of previous analysis */
+	public void setResults(String[] algo, String[] arrivalD, double[] lamb, String[] serviceD, int[] queueN, double[] S, double[] R, double[] Q, double[] X, double[] N){
+		for(int i = 0; i < algo.length; i++){
+			addResult(algo[i], arrivalD[i], lamb[i], serviceD[i], S[i], R[i], Q[i], X[i], N[i]);
+		}
+	}
+
 	@Override
     public boolean canGoBack() {
 		//parent.setSelectedPanel();
@@ -146,4 +164,50 @@ public class ResultsPanel extends WizardPanel implements JMCHWizardPanel{
     public void lostFocus() { 
         setLastPanel();
     }
+
+
+	//methods for saving the results
+	public String[] getAlgorithms(){
+		return algorithms;
+	}
+
+	public String[] getArrivalDistirbutions(){
+		return arrivalDistibutions;
+	}
+
+	public double[] getLambdas(){
+		return lambdas;
+	}
+
+	public String[] getServiceDistributions(){
+		return serviceDistributions;
+	}
+
+	public int[] getNservers(){
+		return serversNumber;
+	}
+
+	public int[] getNQueues(){
+		return queuesNumber;
+	}
+
+	public double[] getServiceTimes(){
+		return services;
+	}
+
+	public double[] getResponseTimes(){
+		return responseTimes;
+	}
+
+	public double[] getThroughputs(){
+		return thoughputs;
+	}
+
+	public double[] getQueueTimes(){
+		return queueTimes;
+	}
+
+	public double[] getNumberOfCustomers(){
+		return nCustomers;
+	}
 }

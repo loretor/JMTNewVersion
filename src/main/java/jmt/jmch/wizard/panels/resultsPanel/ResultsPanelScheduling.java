@@ -79,18 +79,6 @@ public class ResultsPanelScheduling extends ResultsPanel{
     private final static int COL_THROUGHPUT = 9;
 	private final static int COL_DELETE_BUTTON = 10;
 
-    //for each column, an array of values
-    private String[] algorithms = new String[0];
-    private String[] arrivalDistibutions = new String[0];
-    private double[] lambdas = new double[0];
-    private String[] serviceDistributions = new String[0];
-    private int[] serversNumber = new int[0];
-    private double[] services = new double[0];
-    private double[] responseTimes = new double[0];
-    private double[] queueTimes = new double[0];
-    private double[] thoughputs = new double[0];
-    private double[] nCustomers = new double[0];
-
     /** This Action is only for displaying the X in each row */
     private AbstractAction deleteOneResult = new AbstractAction("") {
 		/**

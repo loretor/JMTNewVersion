@@ -277,10 +277,11 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 
         //description of the policy
         JPanel descrPanel = new JPanel(new BorderLayout());
-        descrPanel.setPreferredSize(new Dimension(leftPanel.getWidth(), 120));
+        //descrPanel.setPreferredSize(new Dimension(leftPanel.getWidth(), 120));
         descrLabel = new JLabel();
         descrLabel.setText("<html><body><p style='text-align:justify;'><font size=\"3\">"+simulation.getDescription()+"</p></body></html>");
         descrPanel.add(descrLabel, BorderLayout.NORTH);
+        descrPanel.add(Box.createVerticalStrut(10), BorderLayout.CENTER);
         leftPanel.add(descrPanel, BorderLayout.NORTH);
 
         //paramters panel
@@ -312,7 +313,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         rightPanel.add(Box.createVerticalStrut(10), BorderLayout.SOUTH);
 
         Box mainBox = Box.createVerticalBox();
-        mainBox.add(Box.createVerticalStrut(5));
+        mainBox.add(Box.createVerticalStrut(20));
 		mainBox.add(introductionBox);
 		mainBox.add(Box.createVerticalStrut(10));
         mainBox.add(mainPanel);
@@ -975,7 +976,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         MeasureDefinition results = solver.getModel().getSimulationResults();
         parent.setIconFinish();
 
-        parent.routeResults(solver.getQueueStrategy(), 
+        parent.routeResults(solver.getStrategy(), 
             solver.getInterArrivalDistribution(), 
             getLastMeasure(results, 0),
             solver.getServiceDistribution(), 

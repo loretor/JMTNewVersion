@@ -45,21 +45,21 @@ public class Constants {
 
     //descriptions of all the policies
     public static final String FCFS_DESCRIPTION = 
-        "The FCFS (First come first served) sheduling policy is a scheduling algorithm that orders the jobs inside the queue of a station based on their arrival time. The first task that arrives is the first to be executed and subsequent tasks are executed in the order of their arrival.";
+        "The FCFS (First come first served) sheduling policy is a scheduling algorithm that executes queued jobs based on their arrival time.";
     public static final String LCFS_DESCRIPTION = 
-        "The LCFS (Last come first served) sheduling policy is a scheduling algorithm that orders the jobs inside the queue of a station based on their arrival time. Most recently arrived tasks are executed before any others. It operates on a 'last come, first served' basis, as a stack data structure.";
+        "The LCFS (Last come first served) sheduling policy  is a scheduling algorithm that executes queued jobs in reverse sequence with respect to their arrival time.";
     public static final String SJF_DESCRIPTION =
-        "The SJF (Shortest Job First) scheduling policy is a scheduling algorithm that orders the job inside the queue based on their service time. Jobs with smaller service time are prioritized with respect to the others inside the queue.";
+        "The SJF (Shortest Job First) scheduling policy is a scheduling algorithm that executes queued jobs in reverse sequence of their requested service time (the shortest job is the first).";
     public static final String LJF_DESCRIPTION =
-        "The LJF (Longest Job First) scheduling policy is a scheduling algorithm that orders the job inside the queue based on their service time. Jobs with higher service time are prioritized with respect to the others inside the queue.";
+        "The LJF (Longest Job First) scheduling policy is a scheduling algorithm that executes queued jobs based on the sequence of required service time (the longest job is the first).";
     
     public static final String PS_DESCRIPTION = 
         "<html>The Processor Sharing (PS) scheduling policy is a scheduling algorithm where the server processes all customers simultaneously, allocating a fraction of its total capacity to each, inversely proportional to the number of customers. If the station has m servers but only n &lt; m customers. each is executed as if it were alone.</html>";
 
     public static final String RR_DESCRIPTION =
-        "The RR (Round Robin) routing policy is a routing algorithm to distribute jobs as they arrive at the router. Jobs are routed cyclically to the outgoing links according to a circular routing pattern. The first customer is send to the top station, then second one to the central one, the third to the bottom one, and the cycle repeates.";
+        "The RR (Round Robin) routing policy is a routing algorithm where jobs are routed cyclically to outgoing links based on circular routing pattern. The first job is sent to the link of the top station.";
     public static final String PROB_DESCRIPTION =
-        "The Probabilities routing policy is a routing algorithm to distribute jobs as they arrive at the router. Jobs are routed based on probabilities to one of the edges connected to the router. The sum of all probabilities must be equal to 1.";
+        "The Probabilities routing policy is a routing algorithm where jobs are routed to outgoing links based on assigned probabilities (that must sum to 1).";
     public static final String JSQ_DESCRIPTION =
         "The JSQ (Join the Shortest Job Queue) routing policy is a routing algorithm to distribute jobs as they arrive at the router. Jobs are routed to the station connected to the router that has the smallest number of customers in its queue.";
     
@@ -67,11 +67,8 @@ public class Constants {
     public static final String INTRODUCTION_SIMULATION = "<html><body>"
         + "<p style='text-align:justify;'>"
         //+ "<font size=\"4\"><b>Simulation</b></font><br>"
-        + "<font size=\"3\">In this panel, you can simulate a queue or routing policy. "
-        + "Parameters can be set in the <i>Parameters</i> panel and once selected, click on <i>Create</i> button. "
-        + "At this point, simulation can be executed. "
-        + "At any time, simulation parameters can be altered to initiate a new simulation. <br>"
-        + "Each time a simulation with different parameters is initiated, new results will be displayed in the <i>Results</i> panel.</font>"
+        + "<font size=\"3\">In this panel it is possible to simulate the behavior of a scheduling algorithm of a queue station or a routing algorithm.<br> "
+        + "Set the Parameters and then click the <i>Create</i> button. The simulation will start, the obtained metrics will be displayed in the <i>Results</i> panel. </font>"
         + "</p></body></html>";
 
     public static final String NO_DESCRIPTION = "<html><body>"
@@ -83,11 +80,8 @@ public class Constants {
     public static final String INTRODUCTION_RESULTS = "<html><body>"
         + "<p style='text-align:justify;'>"
         //+ "<font size=\"4\"><b>Simulation Results</b></font><br>"
-        + "<font size=\"3\">In this panel, it is possible to visualize all the results of the simulations and to compare them. "
-        + "When a new simulation is created and started, the results of the simulation will be displayed in this table. "
-        + "Simulation results are ordered chronologically based on the time the associated simulation was run. <br>"
-        + "Simulations results can also be removed from the table. <br>"
-        + "Please note that returning to the <i>Main Panel</i> will result in the loss of all table data.</font>"
+        + "<font size=\"3\"> In this panel the results of the simulations are shown according to the sequence of the executions. <br>"
+        + "Note that returning to the <i>Main Panel</i> will result in the loss of all data in the table. </font>"
         + "</p></body></html>";
     
     //tooltips of the MainPanel

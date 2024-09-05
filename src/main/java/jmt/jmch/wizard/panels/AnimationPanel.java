@@ -279,12 +279,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         JPanel descrPanel = new JPanel(new BorderLayout());
         descrPanel.setPreferredSize(new Dimension(leftPanel.getWidth(), 120));
         descrLabel = new JLabel();
-        if(simulation.getType() == SimulationType.ROUTING || simulation.getType() == SimulationType.PROCESSOR_SHARING){ 
-            descrLabel.setText("<html><body><p style='text-align:justify;'><font size=\"3\">"+simulation.getDescription()+"</p></body></html>");
-        }
-        else{ //only in the case of preemptive or non preemptive no description at the beginning
-            descrLabel.setText(Constants.NO_DESCRIPTION);
-        }
+        descrLabel.setText("<html><body><p style='text-align:justify;'><font size=\"3\">"+simulation.getDescription()+"</p></body></html>");
         descrPanel.add(descrLabel, BorderLayout.NORTH);
         leftPanel.add(descrPanel, BorderLayout.NORTH);
 

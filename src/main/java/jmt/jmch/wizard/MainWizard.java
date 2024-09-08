@@ -32,11 +32,14 @@ import jmt.jmch.wizard.panels.resultsPanel.ResultsPanelScheduling;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
@@ -108,29 +111,32 @@ public class MainWizard extends JMCHWizard{
 		this.sim = simulation;
 		this.setTitle(TITLE + " - "+ TITLE_QUEUEING + ", "+simulation.getType().toString());
 		
+		
 		animationPanel = new AnimationPanel(this, simulation);
 		this.addPanel(animationPanel);
 		panelCollection.add(animationPanel);
 
+
 		if(simulation instanceof RoutingSimulation){
 			//decide if the results stored in this class should be forwarded to the new resultsPanel
-			if(resultsPanel != null && resultsPanel instanceof ResultsPanelRouting){ //send old results only if previous simulation was stil a routing one
+			if(resultsPanel != null && resultsPanel instanceof ResultsPanelRouting && rs != null){ //send old results only if previous simulation was stil a routing one
 				resultsPanel = new ResultsPanelRouting(this);
 				resultsPanel.setResults(rs.algorithms, rs.arrivalDistibutions, rs.lambdas, rs.serviceDistributions, rs.queuesNumber, rs.services, rs.responseTimes, rs.queueTimes, rs.thoughputs, rs.nCustomers);
 			}
 			else{
 				resultsPanel = new ResultsPanelRouting(this);
-			}
-			
+			}				
 		}
 		else{
 			resultsPanel = new ResultsPanelScheduling(this);
 		}
+		
 		this.addPanel(resultsPanel);
 		panelCollection.add(resultsPanel);
 
 		this.showNext();
 	}
+
 
 	/**
 	 * Method to create a new MMQueuesPanel
@@ -218,19 +224,21 @@ public class MainWizard extends JMCHWizard{
 
 	/** Save the results of the Results Panel, and display them in the next chosen simulation, if the type is the same */
 	public void saveResults(){
-		rs = new ResultStructure();
-		rs.setAll(
-			resultsPanel.getAlgorithms(), 
-			resultsPanel.getArrivalDistirbutions(), 
-			resultsPanel.getLambdas(), 
-			resultsPanel.getServiceDistributions(), 
-			resultsPanel.getNservers(),
-			resultsPanel.getNQueues(), 
-			resultsPanel.getServiceTimes(), 
-			resultsPanel.getResponseTimes(), 
-			resultsPanel.getQueueTimes(), 
-			resultsPanel.getThroughputs(), 
-			resultsPanel.getNumberOfCustomers());
+		if(resultsPanel != null){ 
+			rs = new ResultStructure();
+			rs.setAll(
+				resultsPanel.getAlgorithms(), 
+				resultsPanel.getArrivalDistirbutions(), 
+				resultsPanel.getLambdas(), 
+				resultsPanel.getServiceDistributions(), 
+				resultsPanel.getNservers(),
+				resultsPanel.getNQueues(), 
+				resultsPanel.getServiceTimes(), 
+				resultsPanel.getResponseTimes(), 
+				resultsPanel.getQueueTimes(), 
+				resultsPanel.getThroughputs(), 
+				resultsPanel.getNumberOfCustomers());
+		}	
 	}
 
 	/**

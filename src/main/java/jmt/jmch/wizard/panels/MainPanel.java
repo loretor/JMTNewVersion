@@ -514,7 +514,7 @@ public class MainPanel extends WizardPanel implements JMCHWizardPanel{
 	@Override
 	public void gotFocus() { //this method is essential for controlling if the user tries to go back to the main panel from a panel like the Result one
 		if (parent.getNumbersPanel() > 0) {
-			if (JOptionPane.showConfirmDialog(this, "This operation resets all data. Are you sure you want to go back to start screen?", "Back operation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+			if (JOptionPane.showConfirmDialog(this, "This operation resets the Results table only when a different algorithm group is selected (Scheduling or Routing, Single Station). \n Are you sure you want to go back to start screen?", "Back operation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				parent.saveResults();
 				parent.resetScreen();
 			} else {

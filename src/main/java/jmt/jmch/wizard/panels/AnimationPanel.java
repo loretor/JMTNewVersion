@@ -138,12 +138,13 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     //--- variables for slider 
     private final double multiplierSlider = 0.01; 
     private final int startValueSlider = 50;
-    private final String sliderArrival = "Avg. Arrival Rate (\u03BB): %.2f cust./s";
+    private final String sliderArrival = "Arrival Rate (\u03BB): %.2f cust./s";
     private final String sliderService = "Avg. Service Time (S): %.2f s";
     private final String sliderTraffic = "<html>Avg. Utilization <sub>per server</sub>: %.2f </html>";
     private final String sliderTrafficSaturation = "<html>Avg. Utilization<sub>server</sub>: Saturation (%.2f) </html>";
     private int LAMBDA_I = 50;
     private int S_I = 95;
+    private int nQueues = 1;
     private final DecimalFormat df = new DecimalFormat("#.##");
     private boolean lambdaSChange = true;
 	private boolean sSChange = true;
@@ -299,10 +300,12 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         animationPanel = new JPanel(new BorderLayout());
         //based on the type of Policy passed in the constructor, create a new Animation
         if(simulation.getType() == SimulationType.ROUTING){
-            animation = new MultipleQueueNetAnimation(this, animationPanel, simulation);     
+            animation = new MultipleQueueNetAnimation(this, animationPanel, simulation); 
+            nQueues = 3;
         }
         else{
             animation = new SingleQueueNetAnimation(this, animationPanel, simulation);
+            nQueues = 1;
         }
         animationPanel.add(animation, BorderLayout.CENTER);
         animationPanel.setBackground(Color.WHITE);
@@ -430,13 +433,10 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         trafficIntensityPanel.add(avgServiceTimeLabel);
         createSSlider();
         trafficIntensityPanel.add(sS);
-        S = sS.getValue()*multiplierSlider;
         lambda = lambdaS.getValue()*multiplierSlider;
-        trafficIntensityLabel = new JLabel(String.format(sliderTraffic, S*lambda / (int)(serversSpinner.getValue())));
+        nQueues = simulation.getType() == SimulationType.ROUTING ? 3 : 1;
+        trafficIntensityLabel = new JLabel(String.format(sliderTraffic, S*lambda / ((int)(serversSpinner.getValue()) * nQueues)));
         trafficIntensityPanel.add(trafficIntensityLabel);
-        //paramTrafficLabel = new JLabel(String.format(sliderFS, lambda, mhu));
-        //trafficIntensityPanel.add(paramTrafficLabel);
-
 
         parametersPanel.add(trafficIntensityPanel);
         
@@ -602,14 +602,14 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 	}
 
     public void updateFields(){
-        double U = lambda * S / (int)(serversSpinner.getValue()); //Utilization per server
+        double U = lambda * S / ((int)(serversSpinner.getValue()) * nQueues); //Utilization per server
 
         if (U > 0 && U <= 1) { 
-            trafficIntensityLabel.setText(String.format(sliderTraffic, S*lambda / (int)(serversSpinner.getValue())));
+            trafficIntensityLabel.setText(String.format(sliderTraffic, S*lambda / ((int)(serversSpinner.getValue()) * nQueues)));
             trafficIntensityLabel.setForeground(Color.BLACK);
             createButton.setEnabled(true);
         } else {
-            trafficIntensityLabel.setText(String.format(sliderTrafficSaturation, S*lambda / (int)(serversSpinner.getValue())));
+            trafficIntensityLabel.setText(String.format(sliderTrafficSaturation, S*lambda / ((int)(serversSpinner.getValue()) * nQueues)));
             trafficIntensityLabel.setForeground(Color.RED);
             createButton.setEnabled(false);
         }   
@@ -793,13 +793,8 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
             }
         }
 
-        try{
-            parent.setIconLoading();
-        }
-        catch(Exception e){
-            showErrorMessage(e.getMessage());
-        }
-        
+
+        parent.setIconLoading();     
         getSimulationResults();
     }
 

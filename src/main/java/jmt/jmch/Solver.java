@@ -241,11 +241,18 @@ public class Solver implements CommonConstants{
     /** Add all the metrics to control (like setting the parameters in JSIM) */
     private void addMeasure(){
         model.addMeasure(SimulationDefinition.MEASURE_AR, model.getStationKeys().get(0), classKey); //0
-        //service??
         model.addMeasure(SimulationDefinition.MEASURE_RP, model.getStationKeys().get(0), classKey); //1
         model.addMeasure(SimulationDefinition.MEASURE_QT, model.getStationKeys().get(0), classKey); //2
-        model.addMeasure(SimulationDefinition.MEASURE_X, model.getStationKeys().get(0), classKey); //3
-        model.addMeasure(SimulationDefinition.MEASURE_QL, model.getStationKeys().get(0), classKey);  //4             
+
+        if(isSingleQueue){
+            model.addMeasure(SimulationDefinition.MEASURE_X, model.getStationKeys().get(0), classKey); //3
+            model.addMeasure(SimulationDefinition.MEASURE_QL, model.getStationKeys().get(0), classKey);  //4 
+        }
+        else{ //in this case we look at system parameters, so stationKey = null
+            model.addMeasure(SimulationDefinition.MEASURE_S_X, "", classKey); //3
+            model.addMeasure(SimulationDefinition.MEASURE_S_CN, "", classKey);  //4 
+        }
+                    
     }
 
     /** Set the router strategy */

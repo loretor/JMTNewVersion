@@ -397,7 +397,7 @@ public class ResultsPanelRouting extends ResultsPanel{
                 case COL_ALGO:
                     return "Routing Algo.";
                 case COL_DISTR_ARRIVAL:
-                    return "Arrival Distr.";
+                    return "Sys Arrival Distr.";
                 case COL_LAMBDA:
                     return "\u03BB";
                 case COL_DISTR_SERVICE:
@@ -405,11 +405,11 @@ public class ResultsPanelRouting extends ResultsPanel{
                 case COL_QUEUES:
                     return "N.Queues";
                 case COL_SERVICE:
-                    return "Sys.S";
+                    return "S";
                 case COL_R:
                     return "Sys.R";
                 case COL_QUEUETIME:
-                    return "Sys.Q";
+                    return "Q";
                 case COL_NQUEUE:
                     return "Sys.N";
                 case COL_THROUGHPUT:

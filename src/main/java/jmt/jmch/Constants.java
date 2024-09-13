@@ -140,7 +140,7 @@ public class Constants {
     };
 
     public static final String HELP_PROBABILITIES = 
-        "Set the first two probabilities associated to the three outgoing edges of the router. The third probability is computed by the tool as 1.00 - p1 - p2. The create button is blocked if p1 + p2 > 1";
+        "Set the first two probabilities for the router's edges. The third is automatically computed as 1 - p1 - p2. The create button is blocked if p1 + p2 > 1";
 
     public static final String[] HELP_BUTTONS_MARKOV = {
         "Start the simulation or reload it, if it was paused", 

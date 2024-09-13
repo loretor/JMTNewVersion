@@ -240,8 +240,16 @@ public class Solver implements CommonConstants{
 
     /** Add all the metrics to control (like setting the parameters in JSIM) */
     private void addMeasure(){
-        model.addMeasure(SimulationDefinition.MEASURE_AR, model.getStationKeys().get(0), classKey); //0
-        model.addMeasure(SimulationDefinition.MEASURE_RP, model.getStationKeys().get(0), classKey); //1
+        if(isSingleQueue){
+            model.addMeasure(SimulationDefinition.MEASURE_AR, model.getStationKeys().get(0), classKey); //0
+            model.addMeasure(SimulationDefinition.MEASURE_RP, model.getStationKeys().get(0), classKey); //1
+        }
+        else{
+            model.addMeasure(SimulationDefinition.MEASURE_AR, routerKey, classKey);
+            model.addMeasure(SimulationDefinition.MEASURE_S_RP, "", classKey); //1
+        }
+        
+       
         model.addMeasure(SimulationDefinition.MEASURE_QT, model.getStationKeys().get(0), classKey); //2
 
         if(isSingleQueue){

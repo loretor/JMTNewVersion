@@ -141,7 +141,9 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     private final String sliderArrival = "Arrival Rate (\u03BB): %.2f cust./s";
     private final String sliderService = "Avg. Service Time (S): %.2f s";
     private final String sliderTraffic = "<html>Avg. Utilization <sub>per server</sub>: %.2f </html>";
+    private final String sliderTrafficProb = "<html>Max. Utilization: %.2f </html>";
     private final String sliderTrafficSaturation = "<html>Avg. Utilization<sub>server</sub>: Saturation (%.2f) </html>";
+    private final String sliderTrafficSaturationProb = "<html>Max. Utilization : Saturation (%.2f) </html>";
     private int LAMBDA_I = 50;
     private int S_I = 95;
     private int nQueues = 1;
@@ -203,6 +205,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
                 } else {
                     createButton.setEnabled(false);
                 }
+                updateFields();
             }           
         }
     };
@@ -435,7 +438,8 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         trafficIntensityPanel.add(sS);
         lambda = lambdaS.getValue()*multiplierSlider;
         nQueues = simulation.getType() == SimulationType.ROUTING ? 3 : 1;
-        trafficIntensityLabel = new JLabel(String.format(sliderTraffic, S*lambda / ((int)(serversSpinner.getValue()) * nQueues)));
+        trafficIntensityLabel = new JLabel();
+        setUtilizationLabel(sliderTrafficProb, sliderTraffic);  
         trafficIntensityPanel.add(trafficIntensityLabel);
 
         parametersPanel.add(trafficIntensityPanel);
@@ -444,7 +448,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         JPanel simulationDuration = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[5], heightPanels);
         simulationDuration.setLayout(new GridLayout(1,2));
         simulationDuration.add(new JLabel("Max n. of samples:"));
-        maxSamples = new JSpinner(new SpinnerNumberModel(10000000, 100000, Integer.MAX_VALUE, 50000));   
+        maxSamples = new JSpinner(new SpinnerNumberModel(1000000, 100000, 10000000, 50000));   
         simulationDuration.add(maxSamples);
         parametersPanel.add(simulationDuration);
 
@@ -576,6 +580,15 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         });
     }
 
+    private void setUtilizationLabel(String prob, String noProb){
+        if(simulation.getType() == SimulationType.ROUTING && simulation.getName() == Constants.PROBABILISTIC){       
+            trafficIntensityLabel.setText(String.format(prob, S*lambda*getMaxProbability()));
+        }
+        else{
+            trafficIntensityLabel.setText(String.format(sliderTraffic, S*lambda / ((int)(serversSpinner.getValue()) * nQueues)));
+        }
+    }
+
     //--------------------- Methods for updating dinamically the sliders (from MMQueues.java) ------------------------
     protected void lambdaSStateChanged(ChangeEvent evt) {
 		if (lambdaS.getValue() == 0) {
@@ -601,15 +614,22 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 		updateFields();
 	}
 
-    public void updateFields(){
-        double U = lambda * S / ((int)(serversSpinner.getValue()) * nQueues); //Utilization per server
+    /* Update the utilization and all the labels related to U */
+    private void updateFields(){
+        double U;
+        if(simulation.getType() == SimulationType.ROUTING && simulation.getName() == Constants.PROBABILISTIC){  
+            U = lambda * S * getMaxProbability();
+        }
+        else{
+            U = lambda * S / ((int)(serversSpinner.getValue()) * nQueues);
+        } 
 
         if (U > 0 && U <= 1) { 
-            trafficIntensityLabel.setText(String.format(sliderTraffic, S*lambda / ((int)(serversSpinner.getValue()) * nQueues)));
+            setUtilizationLabel(sliderTrafficProb, sliderTraffic);
             trafficIntensityLabel.setForeground(Color.BLACK);
             createButton.setEnabled(true);
         } else {
-            trafficIntensityLabel.setText(String.format(sliderTrafficSaturation, S*lambda / ((int)(serversSpinner.getValue()) * nQueues)));
+            setUtilizationLabel(sliderTrafficSaturationProb, sliderTrafficSaturation);
             trafficIntensityLabel.setForeground(Color.RED);
             createButton.setEnabled(false);
         }   
@@ -715,6 +735,13 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 			}
 		}
 	}
+
+    private double getMaxProbability(){
+        double p1 = (double) prob1.getValue();
+        double p2 = (double) prob2.getValue();
+        double p3 = 1 - p2 - p1;
+        return Math.max(p3, Math.max(p2, p1));
+    }
 
     /**
 	 * Update the menuBar for the Scheduling Window

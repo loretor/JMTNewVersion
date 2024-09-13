@@ -71,12 +71,10 @@ public class ResultsPanelRouting extends ResultsPanel{
 	private final static int COL_LAMBDA = 2;
 	private final static int COL_DISTR_SERVICE = 3;
     private final static int COL_QUEUES = 4;
-	private final static int COL_SERVICE = 5;
-    private final static int COL_R = 6;
-    private final static int COL_QUEUETIME = 7; 
-    private final static int COL_NQUEUE = 8;
-    private final static int COL_THROUGHPUT = 9;
-	private final static int COL_DELETE_BUTTON = 10;
+    private final static int COL_R = 5;
+    private final static int COL_NQUEUE = 6;
+    private final static int COL_THROUGHPUT = 7;
+	private final static int COL_DELETE_BUTTON = 8;
 
     /** This Action is only for displaying the X in each row */
     private AbstractAction deleteOneResult = new AbstractAction("") {
@@ -117,14 +115,12 @@ public class ResultsPanelRouting extends ResultsPanel{
 	 * @param arrivalDistr arrival time distribution
 	 * @param lambda the inter arrival time
 	 * @param serviceDistr service time distribution
-	 * @param service service time of the system
 	 * @param responseTime response time of the system
-	 * @param queueTime queue time of the system
 	 * @param thoughput thoughput of the system
 	 * @param nCustomers customer numbers of the system
 	 */
-    public void addResult(String algorithm, String arrivalDistr, double lambda, String serviceDistr, double service, double responseTime, double queueTime, double thoughput, double nCustomer){
-        setNumberOfResults(nResults+1, algorithm, arrivalDistr, lambda, serviceDistr, 3, service, responseTime, queueTime, thoughput, nCustomer);
+    public void addResult(String algorithm, String arrivalDistr, double lambda, String serviceDistr, double responseTime, double thoughput, double nCustomer){
+        setNumberOfResults(nResults+1, algorithm, arrivalDistr, lambda, serviceDistr, 3, responseTime, thoughput, nCustomer);
     }
 
     private void addRow() {
@@ -132,7 +128,7 @@ public class ResultsPanelRouting extends ResultsPanel{
 	}
 
     /** Change the size of data structures updating also the table */
-    private void setNumberOfResults(int number, String algorithm, String arrivalDistr, double lambda, String serviceDistr, int nQueues, double service, double responseTime, double queueTime, double thoughput, double nCustomer) {
+    private void setNumberOfResults(int number, String algorithm, String arrivalDistr, double lambda, String serviceDistr, int nQueues, double responseTime, double thoughput, double nCustomer) {
 		table.stopEditing();
 		nResults = number;
 
@@ -142,9 +138,7 @@ public class ResultsPanelRouting extends ResultsPanel{
         lambdas = ArrayUtils.resize(lambdas, nResults, 0.0);
         serviceDistributions = ArrayUtils.resize(serviceDistributions, nResults, null);
         queuesNumber = ArrayUtils.resize(queuesNumber, nResults, 0);
-        services = ArrayUtils.resize(services, nResults, 0.0);
         responseTimes = ArrayUtils.resize(responseTimes, nResults, 0.0);
-        queueTimes = ArrayUtils.resize(queueTimes, nResults, 0.0);
         thoughputs = ArrayUtils.resize(thoughputs, nResults, 0);
         nCustomers = ArrayUtils.resize(nCustomers, nResults, 0);
 
@@ -154,9 +148,7 @@ public class ResultsPanelRouting extends ResultsPanel{
         lambdas[nResults-1] = lambda;
         serviceDistributions[nResults-1] = serviceDistr;
         queuesNumber[nResults-1] = nQueues;
-        services[nResults-1] =  service;
         responseTimes[nResults-1] = responseTime;
-        queueTimes[nResults-1] = queueTime;
         thoughputs[nResults-1] = thoughput;
         nCustomers[nResults-1] = nCustomer;
        
@@ -262,9 +254,7 @@ public class ResultsPanelRouting extends ResultsPanel{
 		lambdas = ArrayUtils.delete(lambdas, i);
 		serviceDistributions = ArrayUtils.delete(serviceDistributions, i);
         queuesNumber = ArrayUtils.delete(queuesNumber, i);
-        services = ArrayUtils.delete(services, i);
         responseTimes = ArrayUtils.delete(responseTimes, i);
-        queueTimes = ArrayUtils.delete(queueTimes, i);
         thoughputs = ArrayUtils.delete(thoughputs, i);
         nCustomers = ArrayUtils.delete(nCustomers, i);
 
@@ -381,10 +371,10 @@ public class ResultsPanelRouting extends ResultsPanel{
 
     /** The model for the table */
     private class ResultsTableModel extends ExactTableModel{
-        private final int nColumns = 11;
+        private final int nColumns = 9;
 
-        //------------------------------index, algorithm, distribution arrival, --------lambda, distribution service, ----nServers, service, response time, queue times, ncustomers, thoughput, delete
-        private Object[] prototypes = { "100", "------", "------------------", "", "------------------", "", "", "", "", "", "", "", "" };
+        //------------------------------index, algorithm, distribution arrival, --------lambda, distribution service, ----nServers, response time, ncustomers, thoughput, delete
+        private Object[] prototypes = { "100", "------", "------------------", "", "------------------", "", "", "", "", ""};
 
 		@Override
 		public Object getPrototype(int columnIndex) {
@@ -404,12 +394,8 @@ public class ResultsPanelRouting extends ResultsPanel{
                     return "Service Distr.";
                 case COL_QUEUES:
                     return "N.Queues";
-                case COL_SERVICE:
-                    return "S";
                 case COL_R:
                     return "Sys.R";
-                case COL_QUEUETIME:
-                    return "Q";
                 case COL_NQUEUE:
                     return "Sys.N";
                 case COL_THROUGHPUT:
@@ -442,12 +428,8 @@ public class ResultsPanelRouting extends ResultsPanel{
                     return serviceDistributions[rowIndex];
                 case COL_QUEUES:
                     return queuesNumber[rowIndex];
-                case COL_SERVICE:
-                    return services[rowIndex];
                 case COL_R:
-                    return responseTimes[rowIndex];
-                case COL_QUEUETIME:
-                    return queueTimes[rowIndex];             
+                    return responseTimes[rowIndex];           
                 case COL_NQUEUE:
                     return nCustomers[rowIndex];  
                 case COL_THROUGHPUT:

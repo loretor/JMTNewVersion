@@ -119,13 +119,18 @@ public class MainWizard extends JMCHWizard{
 
 		if(simulation instanceof RoutingSimulation){
 			//decide if the results stored in this class should be forwarded to the new resultsPanel
-			if(resultsPanel != null && resultsPanel instanceof ResultsPanelRouting && rs != null){ //send old results only if previous simulation was stil a routing one
-				resultsPanel = new ResultsPanelRouting(this);
-				resultsPanel.setResults(rs.algorithms, rs.arrivalDistibutions, rs.lambdas, rs.serviceDistributions, rs.queuesNumber, rs.services, rs.responseTimes, rs.queueTimes, rs.thoughputs, rs.nCustomers);
+			try{
+				if(resultsPanel != null && resultsPanel instanceof ResultsPanelRouting && rs != null){ //send old results only if previous simulation was stil a routing one
+					resultsPanel = new ResultsPanelRouting(this);
+					resultsPanel.setResults(rs.algorithms, rs.arrivalDistibutions, rs.lambdas, rs.serviceDistributions, rs.queuesNumber, rs.responseTimes, rs.thoughputs, rs.nCustomers);
+				}
+				else{
+					resultsPanel = new ResultsPanelRouting(this);
+				}
+			} catch(Exception e){
+				handleException(e);
 			}
-			else{
-				resultsPanel = new ResultsPanelRouting(this);
-			}				
+							
 		}
 		else{
 			resultsPanel = new ResultsPanelScheduling(this);
@@ -136,6 +141,19 @@ public class MainWizard extends JMCHWizard{
 
 		this.showNext();
 	}
+
+
+    public void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+
+    public void handleException(Exception e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+		showErrorMessage(sw.toString());
+    }
 
 
 	/**
@@ -256,7 +274,7 @@ public class MainWizard extends JMCHWizard{
 	 */
 	public void routeResults(String algorithm, String arrivalDistr, double lambda, String serviceDistr, int nServers, double service, double responseTime, double queueTime, double thoughput, double queueNumber){
 		if(sim instanceof RoutingSimulation){
-			resultsPanel.addResult(algorithm, arrivalDistr, lambda, serviceDistr, service, responseTime, queueTime, thoughput, queueNumber);
+			resultsPanel.addResult(algorithm, arrivalDistr, lambda, serviceDistr, responseTime, thoughput, queueNumber);
 		}
 		else{
 			resultsPanel.addResult(algorithm, arrivalDistr, lambda, serviceDistr, nServers, service, responseTime, queueTime, thoughput, queueNumber);
@@ -278,10 +296,8 @@ class ResultStructure{
     protected double[] lambdas;
     protected String[] serviceDistributions;
 	protected int[] serversNumber;
-    protected int[] queuesNumber;
-    protected double[] services;
+    protected int[] queuesNumber;;
     protected double[] responseTimes;
-    protected double[] queueTimes;
     protected double[] thoughputs;
     protected double[] nCustomers;
 
@@ -291,9 +307,7 @@ class ResultStructure{
 		lambdas = new double[0];
 		serviceDistributions = new String[0];
 		queuesNumber = new int[0];
-		services = new double[0];
 		responseTimes = new double[0];
-		queueTimes = new double[0];
 		thoughputs = new double[0];
 		nCustomers = new double[0];
 	}
@@ -305,9 +319,7 @@ class ResultStructure{
 		serviceDistributions = Arrays.copyOf(serviceD, serviceD.length);
 		serversNumber = Arrays.copyOf(nServers, nServers.length);
 		queuesNumber = Arrays.copyOf(queueN, queueN.length);
-		services = Arrays.copyOf(S, S.length);
 		responseTimes = Arrays.copyOf(R, R.length);
-		queueTimes = Arrays.copyOf(Q, Q.length);
 		thoughputs = Arrays.copyOf(X, X.length);
 		nCustomers = Arrays.copyOf(N, N.length);
 	}

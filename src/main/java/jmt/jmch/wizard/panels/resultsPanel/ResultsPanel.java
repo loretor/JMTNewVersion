@@ -98,7 +98,7 @@ public class ResultsPanel extends WizardPanel implements JMCHWizardPanel{
 	 * @param thoughput thoughput of the system
 	 * @param nCustomers customer numbers of the system
 	 */
-    public void addResult(String algorithm, String arrivalDistr, double lambda, String serviceDistr, double service, double responseTime, double queueTime, double thoughput, double nCustomer){
+    public void addResult(String algorithm, String arrivalDistr, double lambda, String serviceDistr, double responseTime, double thoughput, double nCustomer){
         
     }
 
@@ -114,9 +114,9 @@ public class ResultsPanel extends WizardPanel implements JMCHWizardPanel{
 	}
 
 	/** Sets the results of previous analysis */
-	public void setResults(String[] algo, String[] arrivalD, double[] lamb, String[] serviceD, int[] queueN, double[] S, double[] R, double[] Q, double[] X, double[] N){
+	public void setResults(String[] algo, String[] arrivalD, double[] lamb, String[] serviceD, int[] queueN, double[] R, double[] X, double[] N){
 		for(int i = 0; i < algo.length; i++){
-			addResult(algo[i], arrivalD[i], lamb[i], serviceD[i], S[i], R[i], Q[i], X[i], N[i]);
+			addResult(algo[i], arrivalD[i], lamb[i], serviceD[i], R[i], X[i], N[i]);
 		}
 	}
 

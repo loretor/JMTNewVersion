@@ -21,7 +21,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -31,7 +30,6 @@ import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -40,7 +38,6 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -51,22 +48,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.w3c.dom.events.MouseEvent;
-
 import jmt.framework.gui.components.JMTMenuBar;
 import jmt.framework.gui.components.JMTToolBar;
 import jmt.framework.gui.help.HoverHelp;
-import jmt.framework.gui.image.ImageLoader;
 import jmt.framework.gui.listeners.MenuAction;
 import jmt.framework.gui.wizard.WizardPanel;
-import jmt.gui.common.ImageLoaderImpl;
 import jmt.gui.common.JMTImageLoader;
 import jmt.gui.common.controller.DispatcherThread;
 import jmt.gui.common.definitions.GuiInterface;
@@ -240,7 +232,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         initGUI();  
     }
 
-    public void initGUI(){
+    private void initGUI(){
         Box introductionBox = Box.createHorizontalBox();
         JLabel introductionLabel = new JLabel(Constants.INTRODUCTION_SIMULATION);
         introductionBox.add(introductionLabel);
@@ -828,7 +820,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     
 
     /** Called each time 'Create' is pressed. Start the simulation with the engine to get the results of the simulation in the Results Panel */
-    public void getSimulationResults(){
+    private void getSimulationResults(){
         int servers = 1;
         double[] prob = null;
         if(simulation.getType() != SimulationType.ROUTING){
@@ -840,7 +832,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
             prob[1] = (double) prob2.getValue();
             prob[2] = 1.0 - prob[0] - prob[1];
         }
-        solver = new Solver(this, simulation, lambda, 1/S, interAComboBox.getSelectedIndex(), serviceComboBox.getSelectedIndex(), servers, prob, (Integer) maxSamples.getValue());
+        solver = new Solver(simulation, lambda, 1/S, interAComboBox.getSelectedIndex(), serviceComboBox.getSelectedIndex(), servers, prob, (Integer) maxSamples.getValue());
 
         File temp = null;
         try {

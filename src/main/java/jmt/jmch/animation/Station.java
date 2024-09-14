@@ -59,6 +59,7 @@ public class Station extends JComponent implements JobContainer, GraphicComponen
 	
 	//this is the queue of Jobs, see CustomCollection to understand why this and not a general Collection
 	private CustomCollection<Job> jobQueue; 
+	private int arrivingJobs = 0; //jobs on the edge from the router to the station
 	private int currentSizeQueue = 0;
 	private JobContainer next;
 	
@@ -197,7 +198,7 @@ public class Station extends JComponent implements JobContainer, GraphicComponen
         if(paintQueueSize) {
         	g.setColor(Color.BLACK);
         	g.setFont(new Font("Arial", Font.PLAIN, 10));
-        	g.drawString("Queue Size: "+String.valueOf(jobQueue.size()), pos.x,  pos.y-10);
+        	g.drawString("Queue Size: "+String.valueOf(jobQueue.size() + arrivingJobs), pos.x,  pos.y-10);
         }
 
 		if(simulation.getName() == Constants.PS){ //if processor sharing, then print the processorSpeed
@@ -297,6 +298,7 @@ public class Station extends JComponent implements JobContainer, GraphicComponen
 	@Override
 	public void addJob(JobContainer prec, Job newJob) {
 		newJob.setEntrance(); //update the entrance in the queue
+		arrivingJobs--;
 		
 		//try to add the job inside the queue, if the queue is full, then drop the job
 		if(jobQueue.size() != sizeQueue) {
@@ -311,6 +313,10 @@ public class Station extends JComponent implements JobContainer, GraphicComponen
 	/** Remove the job from the collection, called by the BoxStation */
 	public void removeJob(Job job) {
 		jobQueue.removeObject(job);
+	}
+
+	public void addArrivingJob(){
+		arrivingJobs++;
 	}
 
 	public Point getPosition() {
@@ -330,7 +336,7 @@ public class Station extends JComponent implements JobContainer, GraphicComponen
 	}
 	
 	public int getNumberWaitingJobs() {
-		return jobQueue.size();
+		return jobQueue.size() + arrivingJobs;
 	}
 	
 	public Simulation getSimulation() {

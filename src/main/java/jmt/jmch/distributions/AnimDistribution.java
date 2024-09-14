@@ -43,6 +43,7 @@ import jmt.engine.random.engine.RandomEngine;
 public abstract class AnimDistribution {
     protected double mean;
     protected double lambda;
+    protected double[] percentiles = new double[2];
 
     private static final String[] distributions = {ExponentialD.NAME, DeterminsiticD.NAME, UniformD.NAME, HyperExponentialD.NAME};
 
@@ -72,6 +73,22 @@ public abstract class AnimDistribution {
      * @param value
      */
     public abstract void setMean(double value);
+
+    /**
+     * Calculate the percentiles 0.10 and 0.90 for each distribution
+     */
+    protected abstract void setPercentiles();
+
+    /**
+     * Map a value x on the interval [percentile 0.10, percentile 0.90]
+     * @return a value between 0 and 1
+     */
+    public double mapValue(double value){
+        double map = (value - percentiles[0]) / (percentiles[1] - percentiles[0]);
+        map = Math.max(0.0, map);
+        map = Math.min(1.0, map);
+        return map;
+    }
 }
 
 
@@ -96,6 +113,13 @@ class ExponentialD extends AnimDistribution{
     public void setMean(double value) {
         lambda = value;
         mean = 1/value;
+        setPercentiles();
+    }
+
+    @Override
+    protected void setPercentiles() {
+        percentiles[0] = -Math.log(1 - 0.10) / lambda;
+        percentiles[1] = -Math.log(1 - 0.90) / lambda;
     }
 }
 
@@ -120,6 +144,13 @@ class DeterminsiticD extends AnimDistribution{
     public void setMean(double value) {
         lambda = value;
         mean = 1/value;
+        setPercentiles();
+    }
+
+    @Override
+    protected void setPercentiles() {
+        percentiles[0] = mean;
+        percentiles[1] = mean;
     } 
 }
 
@@ -144,6 +175,15 @@ class UniformD extends AnimDistribution{
     public void setMean(double value) {
         lambda = value;
         mean = 1/value;
+        setPercentiles();
+    }
+
+    @Override
+    protected void setPercentiles() {
+        double a = mean - 1;
+        double b = mean + 1;
+        percentiles[0] = a + 0.10 * (b-a);
+        percentiles[1] = a + 0.90 * (b-a);
     } 
 }
 
@@ -168,5 +208,20 @@ class HyperExponentialD extends AnimDistribution{
     public void setMean(double value) {
         lambda = value;
         mean = 1/value;
+        setPercentiles();
+    }
+
+    private double getPercentile(double perc){
+        double cumulative = 0.0;
+        cumulative += 0.5 * (-Math.log(1 - perc) / (lambda - 0.1));
+        cumulative += 0.5 * (-Math.log(1 - perc) / (lambda + 0.1));
+        return cumulative;
+    } 
+
+    @Override
+    protected void setPercentiles() {
+        double[] result = new double[2];
+        result[0] = getPercentile(0.10);
+        result[1] = getPercentile(0.90);
     }
 }

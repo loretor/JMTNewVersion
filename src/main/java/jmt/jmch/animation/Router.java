@@ -179,15 +179,32 @@ public class Router extends JComponent implements JobContainer, GraphicComponent
 		int min = Integer.MAX_VALUE;
 		int index = -1;
 		int size;
+		int count = 0;
+		Random rand = new Random();
+
 		for(int i = 0; i < nextStations.size(); i++) {		
 			size = nextStations.get(i).getNumberWaitingJobs();
-			if(min > size) {
-				min = size;
-				index = i;
-			}
+
+			//Reservoir Sampling, select one of the mins casually
+			if (size < min) {
+                min = size;
+                index = i;
+                count = 1; 
+            } else if (size == min) {
+                count++; // other min found
+
+                // eventual substitution
+                if (rand.nextInt(count) == 0) { //new min has a probability of 1/count of beeing selected as min
+                    index = i;
+                }
+            }
 		}
+
+		nextStations.get(index).addArrivingJob();
 		return index;
 	}
+
+	
 	
 	/**
 	 * method to route a job to one of the edges connected to the Router

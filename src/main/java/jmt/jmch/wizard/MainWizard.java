@@ -119,18 +119,13 @@ public class MainWizard extends JMCHWizard{
 
 		if(simulation instanceof RoutingSimulation){
 			//decide if the results stored in this class should be forwarded to the new resultsPanel
-			try{
-				if(resultsPanel != null && resultsPanel instanceof ResultsPanelRouting && rs != null){ //send old results only if previous simulation was stil a routing one
-					resultsPanel = new ResultsPanelRouting(this);
-					resultsPanel.setResults(rs.algorithms, rs.arrivalDistibutions, rs.lambdas, rs.serviceDistributions, rs.queuesNumber, rs.responseTimes, rs.thoughputs, rs.nCustomers);
-				}
-				else{
-					resultsPanel = new ResultsPanelRouting(this);
-				}
-			} catch(Exception e){
-				handleException(e);
+			if(resultsPanel != null && resultsPanel instanceof ResultsPanelRouting && rs != null){ //send old results only if previous simulation was stil a routing one
+				resultsPanel = new ResultsPanelRouting(this);
+				resultsPanel.setResults(rs.algorithms, rs.arrivalDistibutions, rs.lambdas, rs.serviceDistributions, rs.queuesNumber, rs.responseTimes, rs.thoughputs, rs.nCustomers);
 			}
-							
+			else{
+				resultsPanel = new ResultsPanelRouting(this);
+			}			
 		}
 		else{
 			resultsPanel = new ResultsPanelScheduling(this);
@@ -141,20 +136,6 @@ public class MainWizard extends JMCHWizard{
 
 		this.showNext();
 	}
-
-
-    public void showErrorMessage(String message) {
-        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-
-    public void handleException(Exception e) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-		showErrorMessage(sw.toString());
-    }
-
 
 	/**
 	 * Method to create a new MMQueuesPanel

@@ -6,7 +6,6 @@ import java.util.Vector;
 
 import jmt.gui.common.CommonConstants;
 import jmt.gui.common.Defaults;
-import jmt.gui.common.animation.Animation;
 import jmt.gui.common.definitions.CommonModel;
 import jmt.gui.common.definitions.ServerType;
 import jmt.gui.common.definitions.SimulationDefinition;
@@ -29,7 +28,6 @@ import jmt.jmch.wizard.panels.AnimationPanel;
  * Time: 17.28
  */
 public class Solver implements CommonConstants{
-    private AnimationPanel panel;
     private CommonModel model;
     private Simulation simulation;
     private boolean isSingleQueue = true;
@@ -102,8 +100,7 @@ public class Solver implements CommonConstants{
      * @param prob array of probabilities (for Routing Probabilities)
      * @param maxSamples max samples for the animation
      */
-    public Solver(AnimationPanel p, Simulation sim, double lambda, double mhu, int indexInter, int indexService, int nservers, double[] prob, int maxSamples){
-        panel = p;
+    public Solver(Simulation sim, double lambda, double mhu, int indexInter, int indexService, int nservers, double[] prob, int maxSamples){
         model = new CommonModel();
         simulation = sim;
         servers = nservers;
@@ -133,7 +130,7 @@ public class Solver implements CommonConstants{
     }
 
     /** Set the parameters for all the distributions. Always keep the mean = 1/mhu, change the cv accordingly */
-    public void setDistributionsParameters(Distribution[] distributions, double mhu){
+    private void setDistributionsParameters(Distribution[] distributions, double mhu){
         double mean = 1/mhu;
         distributions[0].setMean(1/mhu);
 

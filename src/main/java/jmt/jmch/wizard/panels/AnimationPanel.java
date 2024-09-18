@@ -40,6 +40,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -109,6 +110,8 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     private JComboBox<String> serviceComboBox;
     private JSpinner serversSpinner;
 
+    private List<JComponent> editableComponents;
+
     private JLabel avgArrivalRateLabel;
     private JSlider lambdaS;
     private JLabel avgServiceTimeLabel;
@@ -117,7 +120,6 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 
     private JSpinner prob1 = null; //those two spinners are instanciated only if Probabilisitic routing is selected
     private JSpinner prob2 = null;
-    private JButton createButton;
     private JPanel animationPanel;
     private HoverHelp help;
     
@@ -136,8 +138,8 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     private final String sliderTrafficProb = "<html>Max. Utilization: %.2f </html>";
     private final String sliderTrafficSaturation = "<html>Avg. Utilization<sub>server</sub>: Saturation (%.2f) </html>";
     private final String sliderTrafficSaturationProb = "<html>Max. Utilization : Saturation (%.2f) </html>";
-    private int LAMBDA_I = 50;
-    private int S_I = 95;
+    private final int LAMBDA_I = 50;
+    private final int S_I = 95;
     private int nQueues = 1;
     private final DecimalFormat df = new DecimalFormat("#.##");
     private boolean lambdaSChange = true;
@@ -167,44 +169,10 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     private Solver solver;
     private DispatcherThread dispatcher;
 
-
-    //Action associated to the button Create
-    protected AbstractAction CREATE = new AbstractAction("Create") {
-		private static final long serialVersionUID = 1L;
-		{
-			putValue(Action.SHORT_DESCRIPTION, "Create a new policy with the parameters chosen");
-		}
-
-		public void actionPerformed(ActionEvent e) {
-            try {
-                updateAnimationPanel(); 
-            } catch (Exception x) {
-                handleException(x);
-            }
-			
-		}
-	};
-
-    //this is the change listener associated to the two spinner for the probabilities in routing prob
-    private ChangeListener changeListener = new ChangeListener() {
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            if(simulation.getType() == SimulationType.ROUTING && simulation.getName() == Constants.PROBABILISTIC && prob1 != null && prob2 != null){
-                double value1 = (double) prob1.getValue();
-                double value2 = (double) prob2.getValue();
-                if (value1 + value2 <= 1) { 
-                    createButton.setEnabled(true);
-                } else {
-                    createButton.setEnabled(false);
-                }
-                updateFields();
-            }           
-        }
-    };
-
     private AnimationPanel(MainWizard main){
         this.parent = main;
         help = parent.getHoverHelp();
+        editableComponents = new ArrayList<>();
 
         algorithms = NonPreemptiveSimulation.getAlgorithms();
 
@@ -220,7 +188,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         openHelp = new Help(this,"JTCH");
         about = new About(this);
 
-        start.setEnabled(false); //cannot start a simulation without setting the parameters
+        start.setEnabled(true); 
         nextStep.setEnabled(false);
         pause.setEnabled(false);
         reload.setEnabled(false);    
@@ -350,6 +318,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
                     options[i] = algorithms.get(i);
                 }
                 algorithmJComboBox = new JComboBox<String>(options);
+                editableComponents.add(algorithmJComboBox);
                 algorithmJComboBox.setSelectedItem(simulation.getName()); //set as selected policy the one chosen in the MainPanel when the button was pressed
                 algorithmPanel.add(algorithmJComboBox);
             }
@@ -364,13 +333,10 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
             nserversPanel.add(new JLabel("N.servers:"));
             SpinnerNumberModel model = new SpinnerNumberModel(1,1,2,1);
             serversSpinner = new JSpinner(model);
-            serversSpinner.addChangeListener(new ChangeListener(){
-                @Override
-                public void stateChanged(ChangeEvent e) {
-                    updateFields();
-                }
-                
+            serversSpinner.addChangeListener((ChangeEvent e) -> {
+                updateFields();
             });
+            editableComponents.add(serversSpinner);
             nserversPanel.add(serversSpinner);
         }
 
@@ -397,8 +363,15 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
             prob2 = new JSpinner(model2);
             p2Panel.add(prob2);
 
-            prob1.addChangeListener(changeListener);
-            prob2.addChangeListener(changeListener);
+            editableComponents.add(prob1);
+            editableComponents.add(prob2);
+
+            prob1.addChangeListener((ChangeEvent e) -> {
+                updateFields();
+            });
+            prob2.addChangeListener((ChangeEvent e) -> {
+                updateFields();
+            });
         }
 
         //Inter arrival time panel
@@ -406,6 +379,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         interAPanel.setLayout(new GridLayout(1,2));
         interAPanel.add(new JLabel("Inter Arrival Time:"));
         interAComboBox = new JComboBox<String>(distributions);
+        editableComponents.add(interAComboBox);
         interAPanel.add(interAComboBox);
         parametersPanel.add(interAPanel);
 
@@ -414,6 +388,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         serviceTPanel.setLayout(new GridLayout(1,2));
         serviceTPanel.add(new JLabel("Service Time:"));
         serviceComboBox = new JComboBox<String>(distributions);
+        editableComponents.add(serviceComboBox);
         serviceTPanel.add(serviceComboBox);
         parametersPanel.add(serviceTPanel);
 
@@ -423,10 +398,12 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         avgArrivalRateLabel = new JLabel(String.format(sliderArrival, startValueSlider * multiplierSlider));
         trafficIntensityPanel.add(avgArrivalRateLabel);
         createLambdaSlider();
+        editableComponents.add(lambdaS);
         trafficIntensityPanel.add(lambdaS);
         avgServiceTimeLabel = new JLabel(String.format(sliderService, startValueSlider * multiplierSlider));
         trafficIntensityPanel.add(avgServiceTimeLabel);
         createSSlider();
+        editableComponents.add(sS);
         trafficIntensityPanel.add(sS);
         lambda = lambdaS.getValue()*multiplierSlider;
         nQueues = simulation.getType() == SimulationType.ROUTING ? 3 : 1;
@@ -441,16 +418,9 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         simulationDuration.setLayout(new GridLayout(1,2));
         simulationDuration.add(new JLabel("Max n. of samples:"));
         maxSamples = new JSpinner(new SpinnerNumberModel(1000000, 100000, 10000000, 50000));   
+        editableComponents.add(maxSamples);
         simulationDuration.add(maxSamples);
         parametersPanel.add(simulationDuration);
-
-        //create button
-        paddingBorder = new EmptyBorder(0,80,0,80);
-        JPanel createPanel = createPanel(paddingBorder, true, spaceBetweenPanels*2, Constants.HELP_PARAMETERS_PANELS[6], heightPanels);
-        createPanel.setLayout(new BorderLayout());
-        createButton = new JButton(CREATE);
-        createPanel.add(createButton, BorderLayout.CENTER);
-        parametersPanel.add(Box.createVerticalStrut(spaceBetweenPanels));
     }
 
     /**
@@ -571,6 +541,16 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         });
     }
 
+    /**
+     * Sets the editable Components
+     * @param editable true or false if components are editable or not
+     */
+    private void setEditableComponents(boolean editable){
+        for(JComponent comp: editableComponents){
+            comp.setEnabled(editable);
+        }
+    }
+
     private void setUtilizationLabel(String prob, String noProb){
         if(simulation.getType() == SimulationType.ROUTING && simulation.getName() == Constants.PROBABILISTIC){       
             trafficIntensityLabel.setText(String.format(prob, S*lambda*getMaxProbability()));
@@ -608,8 +588,12 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     /* Update the utilization and all the labels related to U */
     private void updateFields(){
         double U;
+        boolean canStart = true;
         if(simulation.getType() == SimulationType.ROUTING && simulation.getName() == Constants.PROBABILISTIC){  
             U = lambda * S * getMaxProbability();
+            double value1 = (double) prob1.getValue();
+            double value2 = (double) prob2.getValue();
+            canStart = (value1 + value2) <= 1;
         }
         else{
             U = lambda * S / ((int)(serversSpinner.getValue()) * nQueues);
@@ -618,11 +602,11 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         if (U > 0 && U <= 1) { 
             setUtilizationLabel(sliderTrafficProb, sliderTraffic);
             trafficIntensityLabel.setForeground(Color.BLACK);
-            createButton.setEnabled(true);
+            start.setEnabled(canStart);
         } else {
             setUtilizationLabel(sliderTrafficSaturationProb, sliderTrafficSaturation);
             trafficIntensityLabel.setForeground(Color.RED);
-            createButton.setEnabled(false);
+            start.setEnabled(false);
         }   
     }
 
@@ -867,6 +851,11 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     //----------------- toolbar buttons actions
     @Override
     public void startAnimation() {
+        if(!nextStep.isEnabled()){
+            updateAnimationPanel(); 
+            setEditableComponents(false);
+        }
+
         animation.start();
         start.setEnabled(false);
         pause.setEnabled(true);
@@ -885,11 +874,12 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 
     @Override
     public void reloadAnimation() {
+        setEditableComponents(true);
         animation.reload();
         start.setEnabled(true);
         pause.setEnabled(false);
         reload.setEnabled(false);
-        nextStep.setEnabled(true);
+        nextStep.setEnabled(false);
     }
 
     @Override

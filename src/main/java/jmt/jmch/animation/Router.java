@@ -29,6 +29,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import jmt.gui.common.JMTImageLoader;
+import jmt.jmch.Constants;
 import jmt.jmch.simulation.Simulation;
 
 /**
@@ -76,7 +77,7 @@ public class Router extends JComponent implements JobContainer, GraphicComponent
 		this.nextEdges = nextEdges;
 		this.nextStations = nextStations;
 		
-		if(simulation.getName() == "JSQ") { //if the policy is the JSQ then the stations must paint the size of their queue
+		if(simulation.getName() == Constants.JSQ) { //if the policy is the JSQ then the stations must paint the size of their queue
 			for(Station st: nextStations) {
 				st.paintQueueSize();
 			}
@@ -94,7 +95,7 @@ public class Router extends JComponent implements JobContainer, GraphicComponent
 		this(parent, xcentered, ycentered, pos, nextEdges, nextStations, simulation);
 		this.percentages = percentages;
 		
-		if(simulation.getName() == "PROBABILITIES") { //if the policy is the PROB then the edges must paint also their percentage
+		if(simulation.getName() == Constants.PROBABILISTIC) { //if the policy is the PROB then the edges must paint also their percentage
 			for(int i = 0; i < nextEdges.size(); i++) {
 				nextEdges.get(i).paintPercentage(percentages[i]);
 			}
@@ -108,7 +109,7 @@ public class Router extends JComponent implements JobContainer, GraphicComponent
 		//get the correct position for centering the station in the panel
 		if(xcentered) {
 			int widthPanel = parent.getWidth();	
-			pos.x = parent.getX()+(widthPanel - size)/2;;		
+			pos.x = parent.getX()+(widthPanel - size)/2;		
 		}
 		if(ycentered) {
 			int heightPanel = parent.getHeight();
@@ -150,7 +151,6 @@ public class Router extends JComponent implements JobContainer, GraphicComponent
 	 */
 	private int roundRobin() {
 		indexRoundRobin = (indexRoundRobin+1) % 3;
-		System.out.println(indexRoundRobin);
 		return indexRoundRobin;
 	}
 	

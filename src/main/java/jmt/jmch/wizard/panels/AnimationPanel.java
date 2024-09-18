@@ -342,7 +342,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         if(simulation.getType() == SimulationType.NON_PREEMPTIVE || simulation.getType() == SimulationType.PREEMPTIVE){
             JPanel algorithmPanel = createPanel(paddingBorder, false, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[0], heightPanels);
             algorithmPanel.setLayout(new GridLayout(1,2));
-            algorithmPanel.add(new JLabel("Algorithm :"));
+            algorithmPanel.add(new JLabel("Policy :"));
 
             if(simulation.getType() == SimulationType.NON_PREEMPTIVE){
                 String[] options = new String[algorithms.size()];
@@ -449,7 +449,6 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         JPanel createPanel = createPanel(paddingBorder, true, spaceBetweenPanels*2, Constants.HELP_PARAMETERS_PANELS[6], heightPanels);
         createPanel.setLayout(new BorderLayout());
         createButton = new JButton(CREATE);
-        help.addHelp(createButton, Constants.HELP_PARAMETERS_PANELS[4]);
         createPanel.add(createButton, BorderLayout.CENTER);
         parametersPanel.add(Box.createVerticalStrut(spaceBetweenPanels));
     }

@@ -20,6 +20,8 @@ package jmt.jmch.wizard.panels;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseListener;
@@ -30,6 +32,7 @@ import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -49,6 +52,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -751,13 +755,32 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         ArrayList<AbstractButton> buttons = new ArrayList<AbstractButton>(); //create a list of AbstractButtons for the helpLabel
 		buttons.addAll(toolbar.populateToolbar(actions));
 
+        parent.setToolBar(toolbar);
+        toolbar.setVisible(true);
+
+        System.out.println(toolbar.getHeight());
+
+        SwingUtilities.invokeLater(() -> {
+        	System.out.println(toolbar.getHeight());
+            int toolbarHeight = toolbar.getHeight();
+
+            toolbar.setPreferredSize(new Dimension(toolbar.getWidth(), toolbarHeight));
+            toolbar.setMaximumSize(new Dimension(Integer.MAX_VALUE, toolbarHeight)); 
+
+            VelocityPanel vp = new VelocityPanel(toolbar.getHeight());
+            toolbar.add(vp); 
+        });
+         
+        
+        System.out.println(toolbar.getHeight());
+
         //add help for each Action/JComboBox with helpLabel
 		for (int i = 0; i < buttons.size(); i++) {
 			AbstractButton button = buttons.get(i);
 			help.addHelp(button, Constants.HELP_BUTTONS_ANIMATIONS[i]);
 		}
 		  
-		parent.setToolBar(toolbar);
+		
 	}
 
     @Override
@@ -989,5 +1012,55 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
             getLastMeasure(results, 2), 
             getLastMeasure(results, 3), 
             getLastMeasure(results, 4));          
+    }
+}
+
+/**
+ * Panel in the toolBar for the velocity of the simlation
+ */
+class VelocityPanel extends JPanel{
+    private int maxHeight;
+
+    private JLabel velocityL;
+
+    private JSlider velocityS;
+    private final int min = 5;   // 0.5
+    private final int max = 20;  // 2.0
+    private final int init = 10; // 1.0
+    private final double multiplier = 10.0;
+
+    public VelocityPanel(int height){
+        super(new BorderLayout());
+        maxHeight = height;
+        //setMaximumSize(new Dimension(Integer.MAX_VALUE, maxHeight));
+        //setPreferredSize(new Dimension(Integer.MAX_VALUE, maxHeight));
+        
+        initialize();
+    }
+
+    public void initialize(){
+        JPanel mainPanel = new JPanel(new FlowLayout());
+        //mainPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, maxHeight));
+        //mainPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, maxHeight));
+
+        velocityL = new JLabel("Simulation Velocity");
+        mainPanel.add(velocityL);
+
+        velocityS = new JSlider(min, max, init);
+        velocityS.setMajorTickSpacing(5); 
+        velocityS.setMinorTickSpacing(1);
+        velocityS.setPaintLabels(true);
+
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
+        for (int i = min; i <= max; i = i+5) {
+            JLabel label = new JLabel(String.valueOf(i / multiplier));
+            label.setFont(new Font("Serif", Font.PLAIN, 10)); 
+            labelTable.put(i, label);
+        }
+        velocityS.setLabelTable(labelTable);
+        //velocityS.setPreferredSize(new Dimension(Integer.MAX_VALUE, maxHeight)); 
+        mainPanel.add(velocityS);
+
+        this.add(mainPanel, BorderLayout.WEST);
     }
 }

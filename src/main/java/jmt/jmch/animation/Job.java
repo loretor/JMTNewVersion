@@ -201,8 +201,4 @@ public class Job extends JComponent{
 	public void setVelocityFactor(int value) {
     	velocityFactor = value;
     }
-
-	public void resetVelocityFactor() {
-    	velocityFactor = 1;
-    }
 }

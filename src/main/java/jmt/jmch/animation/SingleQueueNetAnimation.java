@@ -68,9 +68,9 @@ public class SingleQueueNetAnimation extends AnimationClass{
 		jobList = new ArrayList<>(); //do not move in the super class, since each time I have to reload the simulation, this method is called
 		
 		sink = new Sink(container, true, new Point(0,0), this);
-		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(450,0), new Point(sink.getPositionX() - 10 ,0)}, 2, sink));
+		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(450,0), new Point(sink.getPositionX() - 10 ,0)}, sink));
 		station = new Station(this, container, true, true, new Point(0,0), edgeList.get(0), simulation, nServers);
-		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(80,0), new Point(230,0)}, 2, station));
+		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(80,0), new Point(230,0)}, station));
 		source = new Source(this, container, true, new Point(0,0), edgeList.get(edgeList.size()-1), interArrival, service);
 	}
 	
@@ -147,6 +147,7 @@ public class SingleQueueNetAnimation extends AnimationClass{
 		source.updatePause(pause);
 	}
 
+	@Override
 	public void setVelocityFactor(int factor){
 		source.setVelocityFactor(factor);
 		station.setVelocityFactor(factor);
@@ -173,14 +174,7 @@ public class SingleQueueNetAnimation extends AnimationClass{
 
 	public void resetNextEvent() {
 		//reset all the velocity factors
-		source.setVelocityFactor(1);
-		station.setVelocityFactor(0); //in stations is = 0, since there is also the processor speed
-		for(Job j: jobList) {
-			j.resetVelocityFactor();
-		}
-		for(Edge e: edgeList){
-			e.resetVelocityFactor();
-		}
+		setVelocityFactor(2);
 		
 		for(Edge e: edgeList) {
 			e.resetNextEvent();

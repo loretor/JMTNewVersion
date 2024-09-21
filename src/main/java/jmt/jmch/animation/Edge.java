@@ -85,7 +85,7 @@ public class Edge extends JComponent implements JobContainer{
 	private boolean centered;
 	private boolean isArrow;
 	private Point[] points;
-	private double speed = 2; //by default the speed of the jobs over the edge is = 2, but you can change this value (in Routing the central edge has speed << than other edges)
+	private double speed = 1;
 	
 	private List<Job> jobList;
 	private JobContainer nextContainer = null;
@@ -112,17 +112,15 @@ public class Edge extends JComponent implements JobContainer{
 	 * @param centered, if the edge is y centered with respect to the JPanel or not
 	 * @param isArrow, if the edge is an arrow and not a simple line
 	 * @param points, points of the edge
-	 * @param speed, the speed of the jobs running over this edge
 	 * @param next, JobContainer next to this edge
 	 */
-	public Edge(AnimationClass anim, JPanel container, boolean centered, boolean isArrow, Point[] points, double speed, JobContainer next) {
+	public Edge(AnimationClass anim, JPanel container, boolean centered, boolean isArrow, Point[] points, JobContainer next) {
 		this.animation = anim;
 		this.parent = container;
 		this.centered = centered;
 		this.isArrow = isArrow;
 		this.points = points;
 		this.nextContainer = next;
-		this.speed = speed;
 		
 		jobList = new ArrayList<>();
 	}
@@ -239,16 +237,16 @@ public class Edge extends JComponent implements JobContainer{
 		Point current = j.getPosition();
 		switch(j.getDirection()) {
 			case UP: 
-				j.updatePosition(current.x, current.y - speed);
+				j.updatePosition(current.x, current.y - speed * velocityFactor);
 				break;
 			case DOWN:
-				j.updatePosition(current.x, current.y + speed);
+				j.updatePosition(current.x, current.y + speed * velocityFactor);
 				break;
 			case RIGHT:
-				j.updatePosition(current.x + speed, current.y);
+				j.updatePosition(current.x + speed * velocityFactor, current.y);
 				break;
 			case LEFT:	
-				j.updatePosition(current.x - speed, current.y);
+				j.updatePosition(current.x - speed * velocityFactor, current.y);
 				break;
 		}
 	}
@@ -333,7 +331,6 @@ public class Edge extends JComponent implements JobContainer{
 
 	/* Methods for the Next Step */
 	public void setVelocityFactor(int value) {
-    	speed *= value;
     	velocityFactor = value;
     }
 
@@ -345,10 +342,6 @@ public class Edge extends JComponent implements JobContainer{
 		speed = sp;
 	}
 
-	public void resetVelocityFactor() {
-    	speed /= velocityFactor;
-    	velocityFactor = 1;
-    }
 
 	/* Methods for highlight */
 	public void highlightON(Color jobColor) {

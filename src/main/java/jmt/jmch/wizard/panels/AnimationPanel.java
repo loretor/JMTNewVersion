@@ -170,8 +170,8 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
     private AbstractMCHAction decreaseVelocity;
 
     //------------ properties simulation velocity ---------------
-    private double[] velocity = {0.25, 0.5, 1, 2.0, 4.0};
-    private int indexVelocity = 2;
+    private int[] velocity = {1, 2, 4, 8};
+    private int indexVelocity = 1;
 
     //--------------properties of the animation------------------
     private Simulation simulation;
@@ -889,6 +889,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
             setEditableComponents(false);
         }
 
+        animation.setVelocityFactor(velocity[indexVelocity]);
         animation.start();
         start.setEnabled(false);
         pause.setEnabled(true);
@@ -955,7 +956,8 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         if(indexVelocity == velocity.length - 1){
             increaseVelocity.setEnabled(false);     
         }
-        //increase simulation velocity
+
+        animation.setVelocityFactor(velocity[indexVelocity]);
     }
 
     @Override
@@ -965,7 +967,8 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         if(indexVelocity == 0){
             decreaseVelocity.setEnabled(false);     
         }
-        //decrease simulation velocity
+
+        animation.setVelocityFactor(velocity[indexVelocity]);
     }
 
     @Override

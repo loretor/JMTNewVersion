@@ -76,12 +76,12 @@ public class MultipleQueueNetAnimation extends AnimationClass{
 		jobList = new ArrayList<>(); //do not move this line in the super class
 		
 		//final horizontal edge
-		edgeList.add(new Edge(this,container, true, true, new Point[] {new Point(550,0), new Point(580,0)}, 2, sink));
+		edgeList.add(new Edge(this,container, true, true, new Point[] {new Point(550,0), new Point(580,0)}, sink));
 		
 		//3 edges from stations to final edge
-		edgeList.add(new Edge(this,container, false, false, new Point[]{ new Point(500,75+30), new Point(550,75+30), new Point(550,235)}, 2, edgeList.get(0)));
-		edgeList.add(new Edge(this, container, true, false, new Point[] {new Point(500,0), new Point(550,0)},  2, edgeList.get(0)));
-		edgeList.add(new Edge(this, container, false, false, new Point[] { new Point(500,340+30), new Point(550,340+30), new Point(550,235)}, 2, edgeList.get(0)));
+		edgeList.add(new Edge(this,container, false, false, new Point[]{ new Point(500,75+30), new Point(550,75+30), new Point(550,235)}, edgeList.get(0)));
+		edgeList.add(new Edge(this, container, true, false, new Point[] {new Point(500,0), new Point(550,0)}, edgeList.get(0)));
+		edgeList.add(new Edge(this, container, false, false, new Point[] { new Point(500,340+30), new Point(550,340+30), new Point(550,235)}, edgeList.get(0)));
 		
 		//three stations
 		stationList.add(new Station(this, container, false, false, new Point(300,75), edgeList.get(1), simulation, nServers));
@@ -89,16 +89,16 @@ public class MultipleQueueNetAnimation extends AnimationClass{
 		stationList.add(new Station(this, container, false, false, new Point(300, 340), edgeList.get(3), simulation, nServers));
 		
 		//3 edges from router to stations
-		edgeList.add(new Edge(this, container, false, true, new Point[] {new Point(180,235 - 30), new Point(180, 75+30), new Point(280,75+30)}, 2, stationList.get(0)));
-		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(210,0), new Point(280,0)}, 2, stationList.get(1))); //the value of the speed is 2/2.75 because it comes from some calculations to have the same time to traverse this edge and the other two
-		edgeList.add(new Edge(this, container, false, true, new Point[] { new Point(180,235 + 30), new Point(180, 340+30), new Point(280,340+30)}, 2, stationList.get(2)));
+		edgeList.add(new Edge(this, container, false, true, new Point[] {new Point(180,235 - 30), new Point(180, 75+30), new Point(280,75+30)}, stationList.get(0)));
+		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(210,0), new Point(280,0)}, stationList.get(1)));
+		edgeList.add(new Edge(this, container, false, true, new Point[] { new Point(180,235 + 30), new Point(180, 340+30), new Point(280,340+30)}, stationList.get(2)));
 				
 		//create the two Lists for the router
 		int l = edgeList.size();
 		List<Edge> eList = new ArrayList<>(Arrays.asList(edgeList.get(l-3), edgeList.get(l-2), edgeList.get(l-1)));
 		router = new Router(container, false, true, new Point(160,0), eList, stationList, simulation, probabilities);
 		
-		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(80,0), new Point(150,0)}, 2, router));
+		edgeList.add(new Edge(this, container, true, true, new Point[] {new Point(80,0), new Point(150,0)}, router));
 		
 		source = new Source(this, container, true, new Point(10,0), edgeList.get(edgeList.size()-1), interArrival, service);
 
@@ -263,18 +263,23 @@ public class MultipleQueueNetAnimation extends AnimationClass{
 	}
 
 	@Override
-	public void next() {
-		//first update the velocity of each component that works with time
-		source.setVelocityFactor(5);
+	public void setVelocityFactor(int factor){
+		source.setVelocityFactor(factor);
 		for(Station st: stationList){
-			st.setVelocityFactor(5);
+			st.setVelocityFactor(factor);
 		}
 		for(Job j: jobList) {
-			j.setVelocityFactor(5);
+			j.setVelocityFactor(factor);
 		}
 		for(Edge e: edgeList){
-			e.setVelocityFactor(5);
+			e.setVelocityFactor(factor);
 		}
+	}
+
+	@Override
+	public void next() {
+		//first update the velocity of each component that works with time
+		setVelocityFactor(5);
 		
 		anim.start();
 		
@@ -288,16 +293,7 @@ public class MultipleQueueNetAnimation extends AnimationClass{
 
 	public void resetNextEvent() {
 		//reset all the velocity factors
-		source.setVelocityFactor(1);
-		for(Station st: stationList){
-			st.setVelocityFactor(0);
-		}
-		for(Job j: jobList) {
-			j.resetVelocityFactor();
-		}
-		for(Edge e: edgeList){
-			e.resetVelocityFactor();
-		}
+		setVelocityFactor(1);
 		
 		for(Edge e: edgeList) {
 			e.resetNextEvent();

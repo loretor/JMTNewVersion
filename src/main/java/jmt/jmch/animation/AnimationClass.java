@@ -124,4 +124,9 @@ public class AnimationClass extends JComponent implements Animation{
 	public Simulation getSimulation(){
 		return simulation;
 	}
+
+	@Override
+	public void setVelocityFactor(int velocity) {
+		
+	}
 }

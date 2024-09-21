@@ -49,12 +49,11 @@ public class BoxStation extends JComponent implements JobContainer{
 	private Color color;
 	private double duration;
 	private double mapDuration;
-	private int maxValue = 10; //this value is for the conversion from the duration to a colored box (try to select a max value accordingly to the type of distribution)
 
 	//information about the current Job for processor sharing
 	private long entranceTime;
 	private long pausedTime = 0;
-	private double velocityFactor = 0;
+	private double velocityFactor = 1;
 	private double processorSpeed = 1;
 	
 	private boolean isWorking = false; //to know if there is a job in this BoxStation or not to print the circle above
@@ -97,7 +96,7 @@ public class BoxStation extends JComponent implements JobContainer{
 		if(station.isProcessorSharing() && isWorking) {
 			long jobDuration = (long) (currentJob.getDuration() * Math.pow(10, 3));
 			//System.out.println((System.currentTimeMillis() - entranceTime - pausedTime)*velocityFactor);
-			double newDuration = (jobDuration - (System.currentTimeMillis() - entranceTime - pausedTime)* (velocityFactor + processorSpeed)) / (Math.pow(10,3));
+			double newDuration = (jobDuration - (System.currentTimeMillis() - entranceTime - pausedTime)* (velocityFactor * processorSpeed)) / (Math.pow(10,3));
 			currentJob.setDuration(newDuration);
 			entranceTime = System.currentTimeMillis();
 			pausedTime = 0;

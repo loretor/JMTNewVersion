@@ -24,6 +24,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
@@ -335,6 +336,14 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
                     options[i] = algorithms.get(i);
                 }
                 algorithmJComboBox = new JComboBox<String>(options);
+                algorithmJComboBox.addActionListener(new ActionListener() { //to change the description & titles based on the type of policy selected
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        simulation = SimulationFactory.createSimulation(simulation.getType(), String.valueOf(algorithmJComboBox.getSelectedItem()));
+                        mainPanel.setBorder(new TitledBorder(new EtchedBorder(), simulation.getType().toString() + " Scheduling - " + simulation.getName()));
+                        descrLabel.setText("<html><body><p style='text-align:justify;'><font size=\"3\">"+simulation.getDescription()+"</p></body></html>");
+                    }              
+                });
                 editableComponents.add(algorithmJComboBox);
                 algorithmJComboBox.setSelectedItem(simulation.getName()); //set as selected policy the one chosen in the MainPanel when the button was pressed
                 algorithmPanel.add(algorithmJComboBox);
@@ -799,7 +808,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
 	}
 
     /**
-     * Method called by the Create button to update this panel
+     * Update this panel
      */
     private void updateAnimationPanel(){
         animation.pause();
@@ -811,12 +820,6 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         ad.setMean(lambda);
 
         if(simulation.getType() == SimulationType.NON_PREEMPTIVE || simulation.getType() == SimulationType.PREEMPTIVE || simulation.getType() == SimulationType.PROCESSOR_SHARING){            
-            if(simulation.getType() == SimulationType.NON_PREEMPTIVE){ //in case of non preemptive update the title and the description
-                simulation = SimulationFactory.createSimulation(simulation.getType(), String.valueOf(algorithmJComboBox.getSelectedItem()));
-                mainPanel.setBorder(new TitledBorder(new EtchedBorder(), simulation.getType().toString() + " Scheduling - " + simulation.getName()));
-                descrLabel.setText("<html><body><p style='text-align:justify;'><font size=\"3\">"+simulation.getDescription()+"</p></body></html>");
-            }
-        
             animation.updateSingle(simulation, (int)serversSpinner.getValue(), sd, ad);
         }
         else{ //in case of routing only the animation must be updated

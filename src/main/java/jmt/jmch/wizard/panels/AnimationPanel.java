@@ -104,7 +104,7 @@ import jmt.jmch.distributions.DistributionFactory;
  * Date: 30-mar-2024
  * Time: 14.40
  */
-public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiInterface{
+public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
     private static final String PANEL_NAME = "Simulation";
 
     //------------ components of the panel -----------------------
@@ -206,7 +206,9 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         start.setEnabled(true); 
         nextStep.setEnabled(false);
         pause.setEnabled(false);
-        reload.setEnabled(false);    
+        reload.setEnabled(false);   
+        decreaseVelocity.setEnabled(false); 
+        increaseVelocity.setEnabled(false);
     }
 
     public AnimationPanel(MainWizard main, Simulation sim){
@@ -891,7 +893,21 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         start.setEnabled(false);
         pause.setEnabled(true);
         reload.setEnabled(false);   
-        nextStep.setEnabled(false);   
+        nextStep.setEnabled(false); 
+        
+        if(indexVelocity > 0){
+            decreaseVelocity.setEnabled(true);
+        }
+        else{
+            decreaseVelocity.setEnabled(false);
+        }
+        
+        if(indexVelocity < (velocity.length - 1)){
+            increaseVelocity.setEnabled(true);
+        }
+        else{
+            increaseVelocity.setEnabled(false);
+        }
     }
 
     @Override
@@ -901,6 +917,8 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         pause.setEnabled(false);
         reload.setEnabled(true);
         nextStep.setEnabled(true);
+        decreaseVelocity.setEnabled(false); 
+        increaseVelocity.setEnabled(false);
     }
 
     @Override
@@ -911,6 +929,8 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         pause.setEnabled(false);
         reload.setEnabled(false);
         nextStep.setEnabled(false);
+        decreaseVelocity.setEnabled(false); 
+        increaseVelocity.setEnabled(false);
     }
 
     @Override
@@ -928,25 +948,23 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         nextStep.setEnabled(true);
     }
 
-
+    @Override
     public void increaseVelocity(){
         indexVelocity++;
+        decreaseVelocity.setEnabled(true);
         if(indexVelocity == velocity.length - 1){
-            increaseVelocity.setEnabled(false);
-            decreaseVelocity.setEnabled(true);
+            increaseVelocity.setEnabled(false);     
         }
-        System.out.println(velocity[indexVelocity]);
         //increase simulation velocity
     }
 
-
+    @Override
     public void decreaseVelocity(){
         indexVelocity--;
+        increaseVelocity.setEnabled(true);
         if(indexVelocity == 0){
-            decreaseVelocity.setEnabled(false);
-            increaseVelocity.setEnabled(true);
+            decreaseVelocity.setEnabled(false);     
         }
-        System.out.println(velocity[indexVelocity]);
         //decrease simulation velocity
     }
 
@@ -975,6 +993,8 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         pause.setEnabled(false);
         reload.setEnabled(false);
         nextStep.setEnabled(false);
+        decreaseVelocity.setEnabled(false); 
+        increaseVelocity.setEnabled(false);
     }
 
     //-----------------------------------------------------------------------

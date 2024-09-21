@@ -73,7 +73,7 @@ import jmt.jmch.wizard.MainWizard;
  * Date: 29-mar-2024
  * Time: 15.04
  */
-public class MainPanel extends WizardPanel implements JMCHWizardPanel{
+public class MainPanel extends JMCHWizardPanel{
 
     private static final String PANEL_NAME = "Main Panel";
     private static final String IMG_STARTSCREEN = "StartScreenJMCH";
@@ -479,37 +479,6 @@ public class MainPanel extends WizardPanel implements JMCHWizardPanel{
 		parent.setToolBar(toolbar);
 	}
 
-    //Overrided methods for performing the actions when the buttons of JToolBar or JMenuBar are pressed
-    @Override
-    public void openHelp() {
-        
-    }
-
-	@Override
-	public void startAnimation() {
-	}
-
-	@Override
-	public void pauseAnimation() {
-	}
-
-	@Override
-	public void reloadAnimation() {
-	}
-
-	@Override
-	public void nextStepAnimation() {
-
-	}
-
-	@Override
-	public void exit() {
-	}
-
-	@Override
-	public void stopAnimation() {
-	}   
-	
 	
 	@Override
 	public void gotFocus() { //this method is essential for controlling if the user tries to go back to the main panel from a panel like the Result one

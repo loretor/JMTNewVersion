@@ -33,7 +33,7 @@ public class IncreaseVelocity extends AbstractMCHAction {
      * Invoked when an action occurs.
      */
     public void actionPerformed(ActionEvent e) {
-        //panel.increaseVelocity();
+        panel.increaseVelocity();
     }
 
 }

@@ -22,7 +22,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import jmt.framework.gui.help.HoverHelp;
-import jmt.framework.gui.wizard.WizardPanel;
 import jmt.gui.common.JMTImageLoader;
 import jmt.jmch.Constants;
 import jmt.jmch.wizard.MainWizard;
@@ -37,7 +36,7 @@ import jmt.jmch.wizard.panels.JMCHWizardPanel;
  * Date: 15-jul-2024
  * Time: 10.53
  */
-public class ResultsPanel extends WizardPanel implements JMCHWizardPanel{
+public class ResultsPanel extends JMCHWizardPanel{
     private static final String PANEL_NAME = "Results";
 
     //------------ components of the panel 
@@ -124,35 +123,6 @@ public class ResultsPanel extends WizardPanel implements JMCHWizardPanel{
     public boolean canGoBack() {
 		//parent.setSelectedPanel();
 		return true;	
-	}
-
-	@Override
-	public void openHelp() {
-
-	}
-
-	@Override
-	public void startAnimation() {
-	}
-
-	@Override
-	public void pauseAnimation() {
-	}
-
-	@Override
-	public void reloadAnimation() {
-	}
-
-	@Override
-	public void nextStepAnimation() {
-	}
-
-	@Override
-	public void exit() {
-	}
-
-	@Override
-	public void stopAnimation() {
 	}
 
 	@Override

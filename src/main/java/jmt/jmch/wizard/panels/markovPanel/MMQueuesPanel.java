@@ -20,11 +20,9 @@ package jmt.jmch.wizard.panels.markovPanel;
 import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
-import javax.swing.JOptionPane;
 
 import jmt.framework.gui.components.JMTToolBar;
 import jmt.framework.gui.help.HoverHelp;
-import jmt.framework.gui.wizard.WizardPanel;
 import jmt.gui.common.JMTImageLoader;
 import jmt.jmch.Constants;
 import jmt.jmch.wizard.actionsWizard.AbstractMCHAction;
@@ -42,7 +40,7 @@ import jmt.jmch.wizard.MainWizard;
  * Date: 15-apr-2024
  * Time: 14.29
  */
-public class MMQueuesPanel extends WizardPanel implements JMCHWizardPanel{
+public class MMQueuesPanel extends JMCHWizardPanel{
     /*
      * This class does not have all the features of the panel as in the AnimationPanel, because I had to re-use the MMQueues.java file.
      * For example there is no JMenu in here, since it was already defined in MMQueues
@@ -122,11 +120,6 @@ public class MMQueuesPanel extends WizardPanel implements JMCHWizardPanel{
 	}
 
     @Override
-    public void openHelp() {
-
-    }
-
-    @Override
     public void startAnimation() {
         start.setEnabled(false);
         pause.setEnabled(true);
@@ -140,21 +133,6 @@ public class MMQueuesPanel extends WizardPanel implements JMCHWizardPanel{
         pause.setEnabled(false);
         stop.setEnabled(true);
         mq.pauseBActionPerformed();
-    }
-
-    @Override
-    public void reloadAnimation() {
-
-    }
-
-    @Override
-    public void nextStepAnimation() {
-
-    }
-
-    @Override
-    public void exit() {
-
     }
 
     @Override

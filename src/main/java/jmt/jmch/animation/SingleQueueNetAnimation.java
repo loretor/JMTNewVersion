@@ -147,17 +147,21 @@ public class SingleQueueNetAnimation extends AnimationClass{
 		source.updatePause(pause);
 	}
 
+	public void setVelocityFactor(int factor){
+		source.setVelocityFactor(factor);
+		station.setVelocityFactor(factor);
+		for(Job j: jobList) {
+			j.setVelocityFactor(factor);
+		}
+		for(Edge e: edgeList){
+			e.setVelocityFactor(factor);
+		}
+	}
+
 	@Override
 	public void next() {
 		//first update the velocity of each component that works with time
-		source.setVelocityFactor(5);
-		station.setVelocityFactor(5);
-		for(Job j: jobList) {
-			j.setVelocityFactor(5);
-		}
-		for(Edge e: edgeList){
-			e.setVelocityFactor(5);
-		}
+		setVelocityFactor(5);
 		
 		anim.start();
 		

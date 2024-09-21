@@ -97,7 +97,7 @@ public class Router extends JComponent implements JobContainer, GraphicComponent
 		
 		if(simulation.getName() == Constants.PROBABILISTIC) { //if the policy is the PROB then the edges must paint also their percentage
 			for(int i = 0; i < nextEdges.size(); i++) {
-				nextEdges.get(i).paintPercentage(percentages[i]);
+				nextEdges.get(i).paintPercentage(percentages[i], i+1);
 			}
 		}
 	}
@@ -233,11 +233,12 @@ public class Router extends JComponent implements JobContainer, GraphicComponent
 		percentages = probabilities;
 		//repaint all the edges
 		for(int i = 0; i < nextEdges.size(); i++) {
-			nextEdges.get(i).paintPercentage(percentages[i]);
+			nextEdges.get(i).paintPercentage(percentages[i], i+1);
 		}
 	}
-	//---------- Graphic Component methods
 
+
+	//---------- Graphic Component methods
 	@Override
 	public void setXPos(int xpos) {
 		pos.x = xpos;

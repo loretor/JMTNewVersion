@@ -38,7 +38,7 @@ public class ReloadSimulation extends AbstractMCHAction {
     public ReloadSimulation(JMCHWizardPanel panel) {
         super("Reload Simulation", "Stop", panel);
         putValue(SHORT_DESCRIPTION, "Reload simulation");
-        //putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_S));
+        //putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_R));
     }
 
     /**

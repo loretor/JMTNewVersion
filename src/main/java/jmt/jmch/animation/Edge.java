@@ -92,6 +92,7 @@ public class Edge extends JComponent implements JobContainer{
 	
 	//for the probabilistic routing
 	private boolean paintPercentage = false;
+	private int index = -1;
 	private double percentage = 0.00;
 
 	//for the nextEvent simulation
@@ -160,7 +161,7 @@ public class Edge extends JComponent implements JobContainer{
 		if(paintPercentage) {
 			g.setFont(new Font("Arial", Font.PLAIN, 10));
 			DecimalFormat df = new DecimalFormat("#.##");
-			String value = "p: "+ df.format(percentage);
+			String value = "P" + index + ": "+ df.format(percentage);
 			Direction direction = getDirection(points[0], points[1]);
 			if(direction == Direction.UP || direction == Direction.DOWN) {
 				g.drawString(value, points[0].x - 40,  points[0].y + direction.direction() * 15);
@@ -182,10 +183,12 @@ public class Edge extends JComponent implements JobContainer{
 	/**
 	 * Method to paint the percentage near the edge. 
 	 * This method is useful for Routing Probabilistic policy
-	 * @param p
+	 * @param p percentage
+	 * @param index value of the i-th edge
 	 */
-	public void paintPercentage(double p) {
+	public void paintPercentage(double p, int index) {
 		paintPercentage = true;
+		this.index = index;
 		percentage = p;
 	}
 	

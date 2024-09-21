@@ -52,6 +52,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
@@ -75,8 +76,10 @@ import jmt.jmch.Constants;
 import jmt.jmch.Solver;
 import jmt.jmch.wizard.actionsWizard.About;
 import jmt.jmch.wizard.actionsWizard.AbstractMCHAction;
+import jmt.jmch.wizard.actionsWizard.DecreaseVelocity;
 import jmt.jmch.wizard.actionsWizard.Exit;
 import jmt.jmch.wizard.actionsWizard.Help;
+import jmt.jmch.wizard.actionsWizard.IncreaseVelocity;
 import jmt.jmch.wizard.actionsWizard.NextStepSimulation;
 import jmt.jmch.wizard.actionsWizard.PauseSimulation;
 import jmt.jmch.wizard.actionsWizard.ReloadSimulation;
@@ -163,6 +166,12 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
     private AbstractMCHAction nextStep;
     private AbstractMCHAction openHelp;
     private AbstractMCHAction about;
+    private AbstractMCHAction increaseVelocity;
+    private AbstractMCHAction decreaseVelocity;
+
+    //------------ properties simulation velocity ---------------
+    private double[] velocity = {0.25, 0.5, 1, 2.0, 4.0};
+    private int indexVelocity = 2;
 
     //--------------properties of the animation------------------
     private Simulation simulation;
@@ -191,6 +200,8 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         nextStep = new NextStepSimulation(this);
         openHelp = new Help(this,"JTCH");
         about = new About(this);
+        increaseVelocity = new IncreaseVelocity(this);
+        decreaseVelocity = new DecreaseVelocity(this);
 
         start.setEnabled(true); 
         nextStep.setEnabled(false);
@@ -353,7 +364,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
             JPanel p1Panel = new JPanel();
             probabilitiesPanel.add(p1Panel);            
             p1Panel.setLayout(new GridLayout(1,2));
-            p1Panel.add(new JLabel("P1:"));
+            p1Panel.add(new JLabel("Probability P1:"));      
             SpinnerNumberModel model1 = new SpinnerNumberModel(0.5,0,1,0.01);
             prob1 = new JSpinner(model1);
             p1Panel.add(prob1);
@@ -362,7 +373,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
             JPanel p2Panel = new JPanel();
             probabilitiesPanel.add(p2Panel);
             p2Panel.setLayout(new GridLayout(1,2));
-            p2Panel.add(new JLabel("P2:"));
+            p2Panel.add(new JLabel("Probability P2:"));
             SpinnerNumberModel model2 = new SpinnerNumberModel(0.5,0,1,0.01);
             prob2 = new JSpinner(model2);
             p2Panel.add(prob2);
@@ -733,7 +744,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 		menu.addMenu(action);
 
         //Solve window
-		action = new MenuAction("Solve", new AbstractMCHAction[] {start, pause, reload, nextStep, null});
+		action = new MenuAction("Solve", new AbstractMCHAction[] {start, pause, reload, nextStep, null, decreaseVelocity, increaseVelocity});
 		menu.addMenu(action);
 
         //Help window
@@ -750,29 +761,26 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         JMTToolBar toolbar = new JMTToolBar(JMTImageLoader.getImageLoader());	
 
         //first add all the icons with their actions
-        AbstractMCHAction[] actions = new AbstractMCHAction[] {start, pause, reload, nextStep, null, openHelp}; // Builds an array with all actions	
+        AbstractMCHAction[] actions = new AbstractMCHAction[] {start, pause, reload, nextStep, null, decreaseVelocity, increaseVelocity, openHelp}; // Builds an array with all actions	
         toolbar.populateToolbar(actions);
         ArrayList<AbstractButton> buttons = new ArrayList<AbstractButton>(); //create a list of AbstractButtons for the helpLabel
 		buttons.addAll(toolbar.populateToolbar(actions));
+        toolbar.setFloatable(false);
 
-        parent.setToolBar(toolbar);
-        toolbar.setVisible(true);
 
-        System.out.println(toolbar.getHeight());
-
-        SwingUtilities.invokeLater(() -> {
+        /*SwingUtilities.invokeLater(() -> {
         	System.out.println(toolbar.getHeight());
             int toolbarHeight = toolbar.getHeight();
 
             toolbar.setPreferredSize(new Dimension(toolbar.getWidth(), toolbarHeight));
             toolbar.setMaximumSize(new Dimension(Integer.MAX_VALUE, toolbarHeight)); 
 
-            VelocityPanel vp = new VelocityPanel(toolbar.getHeight());
+            VelocityPanel vp = new VelocityPanel();
             toolbar.add(vp); 
         });
          
         
-        System.out.println(toolbar.getHeight());
+        System.out.println(toolbar.getHeight()); */
 
         //add help for each Action/JComboBox with helpLabel
 		for (int i = 0; i < buttons.size(); i++) {
@@ -780,7 +788,7 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
 			help.addHelp(button, Constants.HELP_BUTTONS_ANIMATIONS[i]);
 		}
 		  
-		
+		parent.setToolBar(toolbar);
 	}
 
     @Override
@@ -920,6 +928,28 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
         nextStep.setEnabled(true);
     }
 
+
+    public void increaseVelocity(){
+        indexVelocity++;
+        if(indexVelocity == velocity.length - 1){
+            increaseVelocity.setEnabled(false);
+            decreaseVelocity.setEnabled(true);
+        }
+        System.out.println(velocity[indexVelocity]);
+        //increase simulation velocity
+    }
+
+
+    public void decreaseVelocity(){
+        indexVelocity--;
+        if(indexVelocity == 0){
+            decreaseVelocity.setEnabled(false);
+            increaseVelocity.setEnabled(true);
+        }
+        System.out.println(velocity[indexVelocity]);
+        //decrease simulation velocity
+    }
+
     @Override
     public void stopAnimation() {
         disableAllButtons();
@@ -1019,8 +1049,6 @@ public class AnimationPanel extends WizardPanel implements JMCHWizardPanel, GuiI
  * Panel in the toolBar for the velocity of the simlation
  */
 class VelocityPanel extends JPanel{
-    private int maxHeight;
-
     private JLabel velocityL;
 
     private JSlider velocityS;
@@ -1029,11 +1057,8 @@ class VelocityPanel extends JPanel{
     private final int init = 10; // 1.0
     private final double multiplier = 10.0;
 
-    public VelocityPanel(int height){
+    public VelocityPanel(){
         super(new BorderLayout());
-        maxHeight = height;
-        //setMaximumSize(new Dimension(Integer.MAX_VALUE, maxHeight));
-        //setPreferredSize(new Dimension(Integer.MAX_VALUE, maxHeight));
         
         initialize();
     }
@@ -1047,6 +1072,7 @@ class VelocityPanel extends JPanel{
         mainPanel.add(velocityL);
 
         velocityS = new JSlider(min, max, init);
+        velocityS.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         velocityS.setMajorTickSpacing(5); 
         velocityS.setMinorTickSpacing(1);
         velocityS.setPaintLabels(true);

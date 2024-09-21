@@ -18,6 +18,8 @@
 
 package jmt.jmch;
 
+import org.freehep.graphicsio.swf.SWFAction.If;
+
 /**
  * Class that contains most of the descriptions and help labels of JMCH
  * 
@@ -45,23 +47,23 @@ public class Constants {
 
     //descriptions of all the policies
     public static final String FCFS_DESCRIPTION = 
-        "The FCFS (First come first served) policy is a scheduling rule that executes queued jobs based on their arrival time.";
+        "The FCFS (First come first served) sheduling policy is a scheduling rule that executes queued jobs based on their arrival time.";
     public static final String LCFS_DESCRIPTION = 
-        "The LCFS (Last come first served) policy is a scheduling rule that executes queued jobs in reverse sequence with respect to their arrival time.";
+        "The LCFS (Last come first served) sheduling policy  is a scheduling rule that executes queued jobs in reverse sequence with respect to their arrival time.";
     public static final String SJF_DESCRIPTION =
-        "The SJF (Shortest Job First) policy is a scheduling rule that executes queued jobs in reverse sequence of their requested service time (the shortest job is the first).";
+        "The SJF (Shortest Job First) scheduling policy is a scheduling rule that executes queued jobs in reverse sequence of their requested service time (the shortest job is the first).";
     public static final String LJF_DESCRIPTION =
-        "The LJF (Longest Job First) policy is a scheduling rule that executes queued jobs based on the sequence of required service time (the longest job is the first).";
+        "The LJF (Longest Job First) scheduling policy is a scheduling rule that executes queued jobs based on the sequence of required service time (the longest job is the first).";
     
     public static final String PS_DESCRIPTION = 
-        "<html>The Processor Sharing (PS) policy is a scheduling rule where the server processes all customers simultaneously, allocating a fraction of its total capacity to each, inversely proportional to the number of customers. If the station has m servers but only n &lt; m customers. each is executed as if it were alone.</html>";
+        "<html>The Processor Sharing (PS) scheduling policy is a scheduling rule where a fraction of the total server capacity (inversely proportional to the number of running clients) is allocated to each incoming client. If the station has n servers but only m &lt; n customers, then each customer is executed as if it were alone in the system.</html>";
 
     public static final String RR_DESCRIPTION =
         "The RR (Round Robin) policy is a routing rule where jobs are routed cyclically to outgoing links based on circular routing pattern. The first job is sent to the link of the top station.";
     public static final String PROB_DESCRIPTION =
         "The Probabilities policy is a routing rule where jobs are routed to outgoing links based on assigned probabilities (that must sum to 1).";
     public static final String JSQ_DESCRIPTION =
-        "The JSQ (Join the Shortest Job Queue) policy is a routing rule to distribute jobs as they arrive at the router. Jobs are routed to the station connected to the router that has the smallest number of customers in its queue.";
+        "The JSQ (Join the Shortest Job Queue) policy is a routing rule where arriving jobs are routed to the connected station with the least number of customers in the queue.";
     
     static final String HTML_START = "<html><body><p style='text-align:justify;'>";
     static final String HTML_END = "</p></body></html>";
@@ -112,6 +114,8 @@ public class Constants {
         "Pause the running simulation",
         "Reload the simulation",  
         "Perform a next step in the simulation",
+        "Halve the simulation's velocity",
+        "Double the simulation's velocity",
         "Open the help page"
     };
         

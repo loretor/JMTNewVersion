@@ -464,7 +464,7 @@ public class MainPanel extends WizardPanel implements JMCHWizardPanel{
         toolbar = new JMTToolBar(JMTImageLoader.getImageLoader());	
 
         //first add all the icons with their actions
-        AbstractMCHAction[] actions = new AbstractMCHAction[] {null, openHelp}; // Builds an array with all actions to be put in the toolbar
+        AbstractMCHAction[] actions = new AbstractMCHAction[] {openHelp}; // Builds an array with all actions to be put in the toolbar
 		String[] helpText = {"Open the help page"};
         toolbar.populateToolbar(actions);
         ArrayList<AbstractButton> buttons = new ArrayList<AbstractButton>(); //create a list of AbstractButtons for the helpLabel

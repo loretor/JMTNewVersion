@@ -326,7 +326,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         
         //algorithm Panel (this one is displayed only for Scheduling Policies)
         if(simulation.getType() == SimulationType.NON_PREEMPTIVE || simulation.getType() == SimulationType.PREEMPTIVE){
-            JPanel algorithmPanel = createPanel(paddingBorder, false, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[0], heightPanels);
+            JPanel algorithmPanel = createPanel(paddingBorder, false, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[0], Constants.HELP_PARAMETERS_PANELS[0], heightPanels);
             algorithmPanel.setLayout(new GridLayout(1,2));
             algorithmPanel.add(new JLabel("Policy :"));
 
@@ -354,7 +354,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
 
         //N servers panel (this one is displayed only for Scheduling Policies or Srocessor Sharing)
         if(simulation.getType() == SimulationType.NON_PREEMPTIVE || simulation.getType() == SimulationType.PREEMPTIVE || simulation.getType() == SimulationType.PROCESSOR_SHARING){
-            JPanel nserversPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[1], heightPanels);
+            JPanel nserversPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[1], Constants.HELP_PARAMETERS_PANELS[1], heightPanels);
             nserversPanel.setLayout(new GridLayout(1,2));
             nserversPanel.add(new JLabel("N.servers:"));
             SpinnerNumberModel model = new SpinnerNumberModel(1,1,2,1);
@@ -368,7 +368,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
 
         //probability panel (displayed only for probabilistic routing)
         if(simulation.getType() == SimulationType.ROUTING && simulation.getName() == Constants.PROBABILISTIC){
-            JPanel probabilitiesPanel = createPanel(paddingBorder, false, spaceBetweenPanels, Constants.HELP_PROBABILITIES, 50);
+            JPanel probabilitiesPanel = createPanel(paddingBorder, false, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[2], Constants.HELP_PARAMETERS_PANELS[2], 50);
             //probabilitiesPanel.setBorder(new TitledBorder(new EtchedBorder(), "Probabilities"));
             probabilitiesPanel.setLayout(new BoxLayout(probabilitiesPanel, BoxLayout.Y_AXIS));
 
@@ -401,7 +401,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         }
 
         //Inter arrival time panel
-        JPanel interAPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[2], heightPanels);
+        JPanel interAPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[3], Constants.HELP_PARAMETERS_PANELS[3], heightPanels);
         interAPanel.setLayout(new GridLayout(1,2));
         interAPanel.add(new JLabel("Inter Arrival Time:"));
         interAComboBox = new JComboBox<String>(distributions);
@@ -410,7 +410,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         parametersPanel.add(interAPanel);
 
         //Service Time panel
-        JPanel serviceTPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[3], heightPanels);
+        JPanel serviceTPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[4], Constants.HELP_PARAMETERS_PANELS[4], heightPanels);
         serviceTPanel.setLayout(new GridLayout(1,2));
         serviceTPanel.add(new JLabel("Service Time:"));
         serviceComboBox = new JComboBox<String>(distributions);
@@ -419,7 +419,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         parametersPanel.add(serviceTPanel);
 
         //Slider panel
-        JPanel trafficIntensityPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[4], 160);
+        JPanel trafficIntensityPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[5], Constants.HELP_PARAMETERS_PANELS[5], 160);
         trafficIntensityPanel.setLayout(new GridLayout(5,1));
         avgArrivalRateLabel = new JLabel(String.format(sliderArrival, startValueSlider * multiplierSlider));
         trafficIntensityPanel.add(avgArrivalRateLabel);
@@ -440,7 +440,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         parametersPanel.add(trafficIntensityPanel);
         
         //Simulation Duration
-        JPanel simulationDuration = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.HELP_PARAMETERS_PANELS[5], heightPanels);
+        JPanel simulationDuration = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[6], Constants.HELP_PARAMETERS_PANELS[6], heightPanels);
         simulationDuration.setLayout(new GridLayout(1,2));
         simulationDuration.add(new JLabel("Max n. of samples:"));
         maxSamples = new JSpinner(new SpinnerNumberModel(1000000, 100000, 10000000, 50000));   
@@ -454,17 +454,19 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
      * @param paddingBorder border left and right for all the panels
      * @param padding boolean if it is needed to add a padding over the panel (the first panel does not need the padding)
      * @param space how much padding with the upper panel
-     * @param helpText the string to be displayed on the bottom of the JDialog
+     * @param toolTipText the string to display as a tooltip
+     * @param helpText the string to display at the bottom of the Wizard
      * @param setMaxSpace max height for each panel
      * @return a new Panel
      */
-    private JPanel createPanel(EmptyBorder paddingBorder, boolean padding, int space, String helpText, int setMaxSpace) {
+    private JPanel createPanel(EmptyBorder paddingBorder, boolean padding, int space, String toolTipText, String helpText, int setMaxSpace) {
         if(padding){
             parametersPanel.add(Box.createVerticalStrut(space));
         }
         JPanel p = new JPanel();  
         p.setBorder(paddingBorder);
         p.setMaximumSize(new Dimension(Integer.MAX_VALUE, setMaxSpace));
+        p.setToolTipText(toolTipText);
         parametersPanel.add(p);
         help.addHelp(p, helpText);
         return p;

@@ -56,7 +56,7 @@ public class Constants {
         "The LJF (Longest Job First) scheduling policy is a scheduling rule that executes queued jobs based on the sequence of required service time (the longest job is the first).";
     
     public static final String PS_DESCRIPTION = 
-        "<html>The Processor Sharing (PS) scheduling policy is a scheduling rule where a fraction of the total server capacity (inversely proportional to the number of running clients) is allocated to each incoming client. If the station has n servers but only m &lt; n customers, then each customer is executed as if it were alone in the system.</html>";
+        "<html>The Processor Sharing (PS) scheduling policy is a scheduling rule where all jobs are executed simultaneously. A fraction of the total server capacity, inversely proportional to the number of running jobs, is assigned to each of them. If the station has n servers but only m &lt; n customers, then each customer is executed as if it were alone in the system.</html>";
 
     public static final String RR_DESCRIPTION =
         "The RR (Round Robin) policy is a routing rule where jobs are routed cyclically to outgoing links based on circular routing pattern. The first job is sent to the link of the top station.";
@@ -75,7 +75,7 @@ public class Constants {
     //introduction AnimationPanel
     public static final String INTRODUCTION_SIMULATION = HTML_START + HTML_FONT_TITLE + "Simulation" + HTML_FONT_TIT_END
         + HTML_FONT_NORM + "In this panel it is possible to simulate the behavior of a scheduling algorithm of a queue station or a routing algorithm.<br> "
-        + "Set the Parameters and then click the <i>Create</i> button. The simulation will start, the obtained metrics will be displayed in the <i>Results</i> panel." + HTML_FONT_NOR_END + HTML_END;
+        + "Set the Parameters and then click the <i>Play</i> button. The simulation will start, the obtained metrics will be displayed in the <i>Results</i> panel." + HTML_FONT_NOR_END + HTML_END;
 
     //introduction ResultsPanel
     public static final String INTRODUCTION_RESULTS = HTML_START + HTML_FONT_TITLE + "Simulation Results" + HTML_FONT_TIT_END
@@ -134,17 +134,24 @@ public class Constants {
     };
     
     public static final String[] HELP_PARAMETERS_PANELS = {
-        "Choose the type of Algorithm for the simulation",
+        "Choose the type of Policy for the simulation",
         "Select how many servers are available for each station",
+        "Select the first two probabilities for the router's edges. The third is automatically computed as 1 - p1 - p2. The create button is blocked if p1 + p2 > 1",
         "Select the type of distribution for the inter arrival time between jobs",
         "Select the type of distribution for the service time for each station in the simulation",
         "Select the arrival rate and service time of the simulation such that the utilization of the system is always "+ "\u2264" + " 1",
-        "Select the maximum number of samples collected for each performance index in the simulation",
-        "Once all the parameters are setted, click this button to create the animation. At this point you can start the animation"
+        "Select the maximum number of samples collected for each performance index of the correspondent JSIM model",
     };
 
-    public static final String HELP_PROBABILITIES = 
-        "Set the first two probabilities for the router's edges. The third is automatically computed as 1 - p1 - p2. The create button is blocked if p1 + p2 > 1";
+    public static final String[] TOOLTIPS_PARAMETERS_PANEL = {
+        "Policy of the simulation",
+        "Number of servers",
+        "Probabilities of router's edges",
+        "Inter Arrival Time distribution",
+        "Service Time distribution",
+        "Arrival Rate & Service Time",
+        "Maximum number of samples of JSIM",
+    };
 
     public static final String[] HELP_BUTTONS_MARKOV = {
         "Start the simulation or reload it, if it was paused", 

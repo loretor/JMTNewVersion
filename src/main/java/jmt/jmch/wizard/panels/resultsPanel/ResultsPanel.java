@@ -40,7 +40,6 @@ public class ResultsPanel extends JMCHWizardPanel{
     private static final String PANEL_NAME = "Results";
 
     //------------ components of the panel 
-    protected MainWizard parent;
     protected HoverHelp help;
 	protected ImageIcon statusResults;
 	protected JLabel statusResultsLabel;

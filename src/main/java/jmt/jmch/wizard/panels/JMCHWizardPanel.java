@@ -18,6 +18,7 @@
 package jmt.jmch.wizard.panels;
 
 import jmt.framework.gui.wizard.WizardPanel;
+import jmt.jmch.wizard.MainWizard;
 
 /**
  * Abstract class to group all the new methods used in the panels of the wizard
@@ -27,6 +28,8 @@ import jmt.framework.gui.wizard.WizardPanel;
  * Time: 15.43
  */
 public abstract class JMCHWizardPanel extends WizardPanel{
+    protected MainWizard parent;
+
     /** Opens the panel for help */
     public void openHelp(){ }
 
@@ -48,8 +51,10 @@ public abstract class JMCHWizardPanel extends WizardPanel{
     /** Halve the animation's velocity */
     public void decreaseVelocity() { }
 
-    /** Goes back to the main menu */
-    public void exit(){ }
+    /** Go back to the main menu */
+    public void exit(){ 
+        parent.close();
+    }
 
     /** 
      * Stops the simulation, 

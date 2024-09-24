@@ -109,7 +109,6 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
     private static final String PANEL_NAME = "Simulation";
 
     //------------ components of the panel -----------------------
-    private MainWizard parent;
     private JPanel mainPanel;
     private JPanel leftPanel;
     private JLabel descrLabel;
@@ -128,6 +127,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
 
     private JSpinner prob1 = null; //those two spinners are instanciated only if Probabilisitic routing is selected
     private JSpinner prob2 = null;
+    private JSpinner prob3 = null;
     private JPanel animationPanel;
     private HoverHelp help;
     
@@ -368,26 +368,27 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
 
         //probability panel (displayed only for probabilistic routing)
         if(simulation.getType() == SimulationType.ROUTING && simulation.getName() == Constants.PROBABILISTIC){
-            JPanel probabilitiesPanel = createPanel(paddingBorder, false, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[2], Constants.HELP_PARAMETERS_PANELS[2], 50);
-            //probabilitiesPanel.setBorder(new TitledBorder(new EtchedBorder(), "Probabilities"));
-            probabilitiesPanel.setLayout(new BoxLayout(probabilitiesPanel, BoxLayout.Y_AXIS));
-
-            JPanel p1Panel = new JPanel();
-            probabilitiesPanel.add(p1Panel);            
+            JPanel p1Panel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[2], Constants.HELP_PARAMETERS_PANELS[2], heightPanels);           
             p1Panel.setLayout(new GridLayout(1,2));
             p1Panel.add(new JLabel("Probability P1:"));      
             SpinnerNumberModel model1 = new SpinnerNumberModel(0.5,0,1,0.01);
             prob1 = new JSpinner(model1);
             p1Panel.add(prob1);
-            probabilitiesPanel.add(Box.createVerticalStrut(spaceBetweenPanels));
 
-            JPanel p2Panel = new JPanel();
-            probabilitiesPanel.add(p2Panel);
+            JPanel p2Panel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[2], Constants.HELP_PARAMETERS_PANELS[2], heightPanels);  
             p2Panel.setLayout(new GridLayout(1,2));
             p2Panel.add(new JLabel("Probability P2:"));
             SpinnerNumberModel model2 = new SpinnerNumberModel(0.5,0,1,0.01);
             prob2 = new JSpinner(model2);
             p2Panel.add(prob2);
+
+            JPanel p3Panel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[2], Constants.HELP_PARAMETERS_PANELS[2], heightPanels);  
+            p3Panel.setLayout(new GridLayout(1,2));
+            p3Panel.add(new JLabel("Probability P3:"));
+            prob3 = new JSpinner();
+            prob3.setEnabled(false);
+            prob3.setValue(Integer.valueOf(0));
+            p3Panel.add(prob3);
 
             editableComponents.add(prob1);
             editableComponents.add(prob2);
@@ -407,7 +408,6 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         interAComboBox = new JComboBox<String>(distributions);
         editableComponents.add(interAComboBox);
         interAPanel.add(interAComboBox);
-        parametersPanel.add(interAPanel);
 
         //Service Time panel
         JPanel serviceTPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[4], Constants.HELP_PARAMETERS_PANELS[4], heightPanels);
@@ -416,7 +416,6 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         serviceComboBox = new JComboBox<String>(distributions);
         editableComponents.add(serviceComboBox);
         serviceTPanel.add(serviceComboBox);
-        parametersPanel.add(serviceTPanel);
 
         //Slider panel
         JPanel trafficIntensityPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[5], Constants.HELP_PARAMETERS_PANELS[5], 160);
@@ -436,8 +435,6 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         trafficIntensityLabel = new JLabel();
         setUtilizationLabel(sliderTrafficProb, sliderTraffic);  
         trafficIntensityPanel.add(trafficIntensityLabel);
-
-        parametersPanel.add(trafficIntensityPanel);
         
         //Simulation Duration
         JPanel simulationDuration = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[6], Constants.HELP_PARAMETERS_PANELS[6], heightPanels);
@@ -446,7 +443,6 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         maxSamples = new JSpinner(new SpinnerNumberModel(1000000, 100000, 10000000, 50000));   
         editableComponents.add(maxSamples);
         simulationDuration.add(maxSamples);
-        parametersPanel.add(simulationDuration);
     }
 
     /**
@@ -621,6 +617,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
             U = lambda * S * getMaxProbability();
             double value1 = (double) prob1.getValue();
             double value2 = (double) prob2.getValue();
+            prob3.setValue(Double.valueOf(1 - value1 - value2));
             canStart = (value1 + value2) <= 1;
         }
         else{
@@ -979,11 +976,6 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
     @Override
     public void stopAnimation() {
         disableAllButtons();
-    }
-
-    @Override
-    public void exit(){
-        parent.close();
     }
 
     @Override

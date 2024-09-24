@@ -46,7 +46,6 @@ public class MMQueuesPanel extends JMCHWizardPanel{
      * For example there is no JMenu in here, since it was already defined in MMQueues
      */
 
-    private MainWizard parent;
     private String selectedMethod;
     private MMQueues mq;
 

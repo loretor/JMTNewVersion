@@ -20,7 +20,6 @@ package jmt.jmch.wizard;
 
 import jmt.gui.common.CommonConstants;
 import jmt.gui.common.JMTImageLoader;
-import jmt.gui.jwat.JWatWizard;
 import jmt.jmch.simulation.RoutingSimulation;
 import jmt.jmch.simulation.Simulation;
 import jmt.jmch.wizard.panels.AnimationPanel;
@@ -32,14 +31,11 @@ import jmt.jmch.wizard.panels.resultsPanel.ResultsPanelScheduling;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 

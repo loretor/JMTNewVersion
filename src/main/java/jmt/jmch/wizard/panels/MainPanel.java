@@ -44,6 +44,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
@@ -53,6 +54,7 @@ import javax.swing.border.EtchedBorder;
 import jmt.framework.gui.components.JMTMenuBar;
 import jmt.framework.gui.components.JMTToolBar;
 import jmt.framework.gui.help.HoverHelp;
+import jmt.framework.gui.listeners.AbstractJMTAction;
 import jmt.framework.gui.listeners.MenuAction;
 import jmt.framework.gui.wizard.WizardPanel;
 import jmt.gui.common.CommonConstants;
@@ -81,7 +83,6 @@ public class MainPanel extends JMCHWizardPanel{
 	private int imgWeight;
 	private int BUTTONHEIGHT;
 
-    private MainWizard parent;
 	private JMTMenuBar menu;
 	private JMTToolBar toolbar;
     private HoverHelp help; //retrieve from parent the HoverHelp
@@ -236,7 +237,7 @@ public class MainPanel extends JMCHWizardPanel{
 	};
 
     public MainPanel(MainWizard main){
-        this.parent = main;
+        parent = main;
 		help = parent.getHoverHelp();
 
         openHelp = new Help(this,"JTCH");

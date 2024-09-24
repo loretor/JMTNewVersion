@@ -100,7 +100,7 @@ public class SingleQueueNetAnimation extends AnimationClass{
 		}
 		for(Job j: jobList) {
 			j.paint(g);
-		}	
+		}
 	}
 	
 	@Override

@@ -173,7 +173,7 @@ public class Solver implements CommonConstants{
         Object serverKey = model.addStation("Queue "+(serverNameIndex), STATION_TYPE_SERVER, 1, new ArrayList<ServerType>());
         serverNameIndex++;
 
-        model.setStationQueueCapacity(serverKey, 5);
+        model.setStationQueueCapacity(serverKey, 5+nservers);
         model.setDropRule(serverKey, classKey, "Drop");
         setStrategy(serverKey);
         //model.setServiceWeight(serverKey, classKey, Defaults.getAsDouble("serviceWeight"));

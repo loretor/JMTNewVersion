@@ -36,6 +36,8 @@ public class Solver implements CommonConstants{
     private int serverNameIndex = 1;
     private int servers = 1;
 
+    private int nQueues = 1; //(for the probabilities, nQueues could be 1,2 or 3 based on the probabilities)
+
     //------------------- keys of the model --------------------------
     private Object classKey;
     private Object sourceKey;
@@ -126,6 +128,7 @@ public class Solver implements CommonConstants{
         
         if(!isSingleQueue){ //this operation needs to be performed after setting the connections
             setRouterStrategy(prob);
+            checkNumberOfQueues(prob);
         } 
     }
 
@@ -282,7 +285,29 @@ public class Solver implements CommonConstants{
                 } 
                 break;                  
         }
-        
+    }
+
+    /* Check the number of queues reachable */
+    private void checkNumberOfQueues(double[] prob){
+        if(prob == null){
+            if(isSingleQueue){
+                nQueues = 1;
+            }
+            else{
+                nQueues = 3;
+            }    
+            return;
+        }
+        nQueues = 0;
+        if(prob[0] > 0){
+            nQueues++;
+        }
+        if(prob[1] > 0){
+            nQueues++;
+        }
+        if(prob[2] > 0){
+            nQueues++;
+        }
     }
 
     public CommonModel getModel(){
@@ -309,4 +334,8 @@ public class Solver implements CommonConstants{
     public int getNumberServers(){  
         return servers;
     }   
+
+    public int getNumberQueues(){
+        return nQueues;
+    }
 }

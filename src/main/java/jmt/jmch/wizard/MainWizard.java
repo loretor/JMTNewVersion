@@ -226,7 +226,6 @@ public class MainWizard extends JMCHWizard{
 				resultsPanel.getArrivalDistirbutions(), 
 				resultsPanel.getLambdas(), 
 				resultsPanel.getServiceDistributions(), 
-				resultsPanel.getNservers(),
 				resultsPanel.getNQueues(), 
 				resultsPanel.getServiceTimes(), 
 				resultsPanel.getResponseTimes(), 
@@ -244,14 +243,15 @@ public class MainWizard extends JMCHWizard{
 	 * @param serviceDistr service time distribution
 	 * @param nServers number of servers for each station
 	 * @param service service time
+	 * @param nQueues number of queues reachable
 	 * @param responseTime response time
 	 * @param queueTime queue time
 	 * @param thoughput thoughput
 	 * @param queueNumber queue number
 	 */
-	public void routeResults(String algorithm, String arrivalDistr, double lambda, String serviceDistr, int nServers, double service, double responseTime, double queueTime, double thoughput, double queueNumber){
+	public void routeResults(String algorithm, String arrivalDistr, double lambda, String serviceDistr, int nServers, double service, int nQueues, double responseTime, double queueTime, double thoughput, double queueNumber){
 		if(sim instanceof RoutingSimulation){
-			resultsPanel.addResult(algorithm, arrivalDistr, lambda, serviceDistr, responseTime, thoughput, queueNumber);
+			resultsPanel.addResult(algorithm, arrivalDistr, lambda, serviceDistr, nQueues, responseTime, thoughput, queueNumber);
 		}
 		else{
 			resultsPanel.addResult(algorithm, arrivalDistr, lambda, serviceDistr, nServers, service, responseTime, queueTime, thoughput, queueNumber);
@@ -272,8 +272,7 @@ class ResultStructure{
     protected String[] arrivalDistibutions;
     protected double[] lambdas;
     protected String[] serviceDistributions;
-	protected int[] serversNumber;
-    protected int[] queuesNumber;;
+    protected int[] queuesNumber;
     protected double[] responseTimes;
     protected double[] thoughputs;
     protected double[] nCustomers;
@@ -289,12 +288,11 @@ class ResultStructure{
 		nCustomers = new double[0];
 	}
 
-	public void setAll(String[] algo, String[] arrivalD, double[] lamb, String[] serviceD, int[] nServers, int[] queueN, double[] S, double[] R, double[] Q, double[] X, double[] N){
+	public void setAll(String[] algo, String[] arrivalD, double[] lamb, String[] serviceD, int[] queueN, double[] S, double[] R, double[] Q, double[] X, double[] N){
 		algorithms = Arrays.copyOf(algo, algo.length);
 		arrivalDistibutions = Arrays.copyOf(arrivalD, arrivalD.length);
 		lambdas = Arrays.copyOf(lamb, lamb.length);
 		serviceDistributions = Arrays.copyOf(serviceD, serviceD.length);
-		serversNumber = Arrays.copyOf(nServers, nServers.length);
 		queuesNumber = Arrays.copyOf(queueN, queueN.length);
 		responseTimes = Arrays.copyOf(R, R.length);
 		thoughputs = Arrays.copyOf(X, X.length);

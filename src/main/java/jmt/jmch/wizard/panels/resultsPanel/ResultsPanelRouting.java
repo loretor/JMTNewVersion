@@ -109,18 +109,9 @@ public class ResultsPanelRouting extends ResultsPanel{
 		}
 	};
 
-    /**
-	 * Method called by the MainWizard to update the Result Panel
-	 * @param algorithm routing algorithm of the animation
-	 * @param arrivalDistr arrival time distribution
-	 * @param lambda the inter arrival time
-	 * @param serviceDistr service time distribution
-	 * @param responseTime response time of the system
-	 * @param thoughput thoughput of the system
-	 * @param nCustomers customer numbers of the system
-	 */
-    public void addResult(String algorithm, String arrivalDistr, double lambda, String serviceDistr, double responseTime, double thoughput, double nCustomer){
-        setNumberOfResults(nResults+1, algorithm, arrivalDistr, lambda, serviceDistr, 3, responseTime, thoughput, nCustomer);
+    @Override
+    public void addResult(String algorithm, String arrivalDistr, double lambda, String serviceDistr, int nQueues, double responseTime, double thoughput, double nCustomer){
+        setNumberOfResults(nResults+1, algorithm, arrivalDistr, lambda, serviceDistr, nQueues, responseTime, thoughput, nCustomer);
     }
 
     private void addRow() {

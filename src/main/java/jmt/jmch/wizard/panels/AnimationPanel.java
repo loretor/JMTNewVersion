@@ -279,6 +279,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         rightPanel.setLayout(new BorderLayout());
 
         animationPanel = new JPanel(new BorderLayout());
+        help.addHelp(animationPanel, Constants.HELP_ANIMATION);
         //based on the type of Policy passed in the constructor, create a new Animation
         if(simulation.getType() == SimulationType.ROUTING){
             animation = new MultipleQueueNetAnimation(this, animationPanel, simulation); 
@@ -417,19 +418,25 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         editableComponents.add(serviceComboBox);
         serviceTPanel.add(serviceComboBox);
 
-        //Slider panel
-        JPanel trafficIntensityPanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[5], Constants.HELP_PARAMETERS_PANELS[5], 160);
-        trafficIntensityPanel.setLayout(new GridLayout(5,1));
+        //Slider panels
+        JPanel avgArrivalRatePanel = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[5], Constants.HELP_PARAMETERS_PANELS[5], heightPanels*3);
+        avgArrivalRatePanel.setLayout(new GridLayout(2,1));
         avgArrivalRateLabel = new JLabel(String.format(sliderArrival, startValueSlider * multiplierSlider));
-        trafficIntensityPanel.add(avgArrivalRateLabel);
+        avgArrivalRatePanel.add(avgArrivalRateLabel);
         createLambdaSlider();
         editableComponents.add(lambdaS);
-        trafficIntensityPanel.add(lambdaS);
+        avgArrivalRatePanel.add(lambdaS);
+
+        JPanel avgServiceTimePanel= createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[6], Constants.HELP_PARAMETERS_PANELS[5], heightPanels*3);
+        avgServiceTimePanel.setLayout(new GridLayout(2,1));
         avgServiceTimeLabel = new JLabel(String.format(sliderService, startValueSlider * multiplierSlider));
-        trafficIntensityPanel.add(avgServiceTimeLabel);
+        avgServiceTimePanel.add(avgServiceTimeLabel);
         createSSlider();
         editableComponents.add(sS);
-        trafficIntensityPanel.add(sS);
+        avgServiceTimePanel.add(sS);
+
+        JPanel trafficIntensityPanel= createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[7], Constants.HELP_PARAMETERS_PANELS[5], heightPanels);
+        trafficIntensityPanel.setLayout(new GridLayout(1,1));
         lambda = lambdaS.getValue()*multiplierSlider;
         nQueues = simulation.getType() == SimulationType.ROUTING ? 3 : 1;
         trafficIntensityLabel = new JLabel();
@@ -437,7 +444,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         trafficIntensityPanel.add(trafficIntensityLabel);
         
         //Simulation Duration
-        JPanel simulationDuration = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[6], Constants.HELP_PARAMETERS_PANELS[6], heightPanels);
+        JPanel simulationDuration = createPanel(paddingBorder, true, spaceBetweenPanels, Constants.TOOLTIPS_PARAMETERS_PANEL[8], Constants.HELP_PARAMETERS_PANELS[6], heightPanels);
         simulationDuration.setLayout(new GridLayout(1,2));
         simulationDuration.add(new JLabel("Max n. of samples:"));
         maxSamples = new JSpinner(new SpinnerNumberModel(1000000, 100000, 10000000, 50000));   
@@ -1058,6 +1065,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
             solver.getServiceDistribution(), 
             solver.getNumberServers(),
             solver.getServiceTimeMean(), 
+            solver.getNumberQueues(),
             getLastMeasure(results, 1),
             getLastMeasure(results, 2), 
             getLastMeasure(results, 3), 

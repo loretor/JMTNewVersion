@@ -112,19 +112,7 @@ public class ResultsPanelScheduling extends ResultsPanel{
 		}
 	};
 
-    /**
-	 * Method called by the MainWizard to update the Result Panel
-	 * @param algorithm queue algorithm of the animation
-	 * @param arrivalDistr arrival time distribution
-	 * @param lambda the inter arrival time
-	 * @param serviceDistr service time distribution
-     * @param nServers number of servers in the station
-	 * @param service service time
-	 * @param responseTime response time
-	 * @param queueTime queue time
-	 * @param thoughput thoughput
-	 * @param nCustomers customer numbers
-	 */
+    @Override
     public void addResult(String algorithm, String arrivalDistr, double lambda, String serviceDistr, int nServers, double service, double responseTime, double queueTime, double thoughput, double nCustomer){
         setNumberOfResults(nResults+1, algorithm, arrivalDistr, lambda, serviceDistr, nServers, service, responseTime, queueTime, thoughput, nCustomer);
     }

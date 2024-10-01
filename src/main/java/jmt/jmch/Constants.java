@@ -109,6 +109,8 @@ public class Constants {
     };
     
     //help text
+    public static final String HELP_ANIMATION = "The max number of jobs in the queue is 5, jobs that arrive when this value has been reached are dropped";
+
     public static final String[] HELP_BUTTONS_ANIMATIONS = {
         "Start the simulation or reload it, if it was paused", 
         "Pause the running simulation",
@@ -136,7 +138,7 @@ public class Constants {
     public static final String[] HELP_PARAMETERS_PANELS = {
         "Choose the type of Policy for the simulation",
         "Select how many servers are available for each station",
-        "Select the first two probabilities for the router's edges. The third is automatically computed as 1 - p1 - p2. The create button is blocked if p1 + p2 > 1",
+        "Select the first two probabilities for the router's edges. The third is automatically computed as 1 - p1 - p2. The play button is blocked if p1 + p2 > 1",
         "Select the type of distribution for the inter arrival time between jobs",
         "Select the type of distribution for the service time for each station in the simulation",
         "Select the arrival rate and service time of the simulation such that the utilization of the system is always "+ "\u2264" + " 1",
@@ -149,8 +151,10 @@ public class Constants {
         "Probabilities of router's edges",
         "Inter Arrival Time distribution",
         "Service Time distribution",
-        "Arrival Rate & Service Time",
-        "Maximum number of samples of JSIM",
+        "Arrival Rate",
+        "Service Time",
+        "Arrival Rate x Service Time",
+        "Maximum number of samples per JSIM metric",
     };
 
     public static final String[] HELP_BUTTONS_MARKOV = {

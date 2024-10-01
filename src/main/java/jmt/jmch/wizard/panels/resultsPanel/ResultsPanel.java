@@ -90,13 +90,12 @@ public class ResultsPanel extends JMCHWizardPanel{
 	 * @param arrivalDistr arrival time distribution
 	 * @param lambda the inter arrival time
 	 * @param serviceDistr service time distribution
-	 * @param service service time of the system
+	 * @param nQueues number of queues reachable
 	 * @param responseTime response time of the system
-	 * @param queueTime queue time of the system
 	 * @param thoughput thoughput of the system
 	 * @param nCustomers customer numbers of the system
 	 */
-    public void addResult(String algorithm, String arrivalDistr, double lambda, String serviceDistr, double responseTime, double thoughput, double nCustomer){
+    public void addResult(String algorithm, String arrivalDistr, double lambda, String serviceDistr, int nQueues, double responseTime, double thoughput, double nCustomer){
         
     }
 
@@ -114,7 +113,7 @@ public class ResultsPanel extends JMCHWizardPanel{
 	/** Sets the results of previous analysis */
 	public void setResults(String[] algo, String[] arrivalD, double[] lamb, String[] serviceD, int[] queueN, double[] R, double[] X, double[] N){
 		for(int i = 0; i < algo.length; i++){
-			addResult(algo[i], arrivalD[i], lamb[i], serviceD[i], R[i], X[i], N[i]);
+			addResult(algo[i], arrivalD[i], lamb[i], serviceD[i], queueN[i], R[i], X[i], N[i]);
 		}
 	}
 

@@ -24,6 +24,7 @@ import javax.swing.JLabel;
 import jmt.framework.gui.help.HoverHelp;
 import jmt.gui.common.JMTImageLoader;
 import jmt.jmch.Constants;
+import jmt.jmch.simulation.SimulationType;
 import jmt.jmch.wizard.MainWizard;
 import jmt.jmch.wizard.panels.JMCHWizardPanel;
 
@@ -111,9 +112,34 @@ public class ResultsPanel extends JMCHWizardPanel{
 	}
 
 	/** Sets the results of previous analysis */
-	public void setResults(String[] algo, String[] arrivalD, double[] lamb, String[] serviceD, int[] queueN, double[] R, double[] X, double[] N){
-		for(int i = 0; i < algo.length; i++){
-			addResult(algo[i], arrivalD[i], lamb[i], serviceD[i], queueN[i], R[i], X[i], N[i]);
+	public void setResults(ResultStructure rs){
+		if(rs.getPreviousSimulationType() == SimulationType.ROUTING){
+			for(int i = 0; i < rs.getAlgorithms().length; i++){
+				addResult(
+					rs.getAlgorithms()[i], 
+					rs.getArrivalDistibutions()[i], 
+					rs.getLambdas()[i], 
+					rs.getServiceDistributions()[i], 
+					rs.getQueuesNumber()[i], 
+					rs.getResponseTimes()[i], 
+					rs.getThoughputs()[i], 
+					rs.getnCustomers()[i]);
+			}
+		}
+		else{
+			for(int i = 0; i < rs.getAlgorithms().length; i++){
+				addResult(
+					rs.getAlgorithms()[i], 
+					rs.getArrivalDistibutions()[i], 
+					rs.getLambdas()[i], 
+					rs.getServiceDistributions()[i], 
+					rs.getNservers()[i],
+					rs.getServices()[i], 
+					rs.getResponseTimes()[i], 
+					rs.getQueueTimes()[i],
+					rs.getThoughputs()[i], 
+					rs.getnCustomers()[i]);
+			}
 		}
 	}
 

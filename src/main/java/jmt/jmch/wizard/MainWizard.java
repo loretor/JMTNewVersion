@@ -22,9 +22,11 @@ import jmt.gui.common.CommonConstants;
 import jmt.gui.common.JMTImageLoader;
 import jmt.jmch.simulation.RoutingSimulation;
 import jmt.jmch.simulation.Simulation;
+import jmt.jmch.simulation.SimulationType;
 import jmt.jmch.wizard.panels.AnimationPanel;
 import jmt.jmch.wizard.panels.MainPanel;
 import jmt.jmch.wizard.panels.markovPanel.MMQueuesPanel;
+import jmt.jmch.wizard.panels.resultsPanel.ResultStructure;
 import jmt.jmch.wizard.panels.resultsPanel.ResultsPanel;
 import jmt.jmch.wizard.panels.resultsPanel.ResultsPanelRouting;
 import jmt.jmch.wizard.panels.resultsPanel.ResultsPanelScheduling;
@@ -32,7 +34,6 @@ import jmt.jmch.wizard.panels.resultsPanel.ResultsPanelScheduling;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JMenuBar;
@@ -112,19 +113,17 @@ public class MainWizard extends JMCHWizard{
 		this.addPanel(animationPanel);
 		panelCollection.add(animationPanel);
 
-
-		if(simulation instanceof RoutingSimulation){
-			//decide if the results stored in this class should be forwarded to the new resultsPanel
-			if(resultsPanel != null && resultsPanel instanceof ResultsPanelRouting && rs != null){ //send old results only if previous simulation was stil a routing one
-				resultsPanel = new ResultsPanelRouting(this);
-				resultsPanel.setResults(rs.algorithms, rs.arrivalDistibutions, rs.lambdas, rs.serviceDistributions, rs.queuesNumber, rs.responseTimes, rs.thoughputs, rs.nCustomers);
-			}
-			else{
-				resultsPanel = new ResultsPanelRouting(this);
-			}			
+		if(simulation.getType() == SimulationType.ROUTING){
+			resultsPanel = new ResultsPanelRouting(this);
 		}
 		else{
 			resultsPanel = new ResultsPanelScheduling(this);
+		}
+
+		// decide if you need to forward also the results of previous simulations
+		if(rs != null && rs.getPreviousSimulationType() == simulation.getType()){	
+			System.out.println("equal type of simulation");	
+			resultsPanel.setResults(rs);
 		}
 		
 		this.addPanel(resultsPanel);
@@ -222,16 +221,19 @@ public class MainWizard extends JMCHWizard{
 		if(resultsPanel != null){ 
 			rs = new ResultStructure();
 			rs.setAll(
+				animationPanel.getSimulationType(),
 				resultsPanel.getAlgorithms(), 
 				resultsPanel.getArrivalDistirbutions(), 
 				resultsPanel.getLambdas(), 
 				resultsPanel.getServiceDistributions(), 
-				resultsPanel.getNQueues(), 
-				resultsPanel.getServiceTimes(), 
 				resultsPanel.getResponseTimes(), 
-				resultsPanel.getQueueTimes(), 
-				resultsPanel.getThroughputs(), 
-				resultsPanel.getNumberOfCustomers());
+				resultsPanel.getThroughputs(),
+				resultsPanel.getNumberOfCustomers(),
+				resultsPanel.getNQueues(), 
+				resultsPanel.getNservers(),				
+				resultsPanel.getServiceTimes(), 			
+				resultsPanel.getQueueTimes()
+			);
 		}	
 	}
 
@@ -267,35 +269,4 @@ public class MainWizard extends JMCHWizard{
 	}
 }
 
-class ResultStructure{
-	protected String[] algorithms;
-    protected String[] arrivalDistibutions;
-    protected double[] lambdas;
-    protected String[] serviceDistributions;
-    protected int[] queuesNumber;
-    protected double[] responseTimes;
-    protected double[] thoughputs;
-    protected double[] nCustomers;
 
-	public ResultStructure(){
-		algorithms = new String[0];
-		arrivalDistibutions = new String[0];
-		lambdas = new double[0];
-		serviceDistributions = new String[0];
-		queuesNumber = new int[0];
-		responseTimes = new double[0];
-		thoughputs = new double[0];
-		nCustomers = new double[0];
-	}
-
-	public void setAll(String[] algo, String[] arrivalD, double[] lamb, String[] serviceD, int[] queueN, double[] S, double[] R, double[] Q, double[] X, double[] N){
-		algorithms = Arrays.copyOf(algo, algo.length);
-		arrivalDistibutions = Arrays.copyOf(arrivalD, arrivalD.length);
-		lambdas = Arrays.copyOf(lamb, lamb.length);
-		serviceDistributions = Arrays.copyOf(serviceD, serviceD.length);
-		queuesNumber = Arrays.copyOf(queueN, queueN.length);
-		responseTimes = Arrays.copyOf(R, R.length);
-		thoughputs = Arrays.copyOf(X, X.length);
-		nCustomers = Arrays.copyOf(N, N.length);
-	}
-}

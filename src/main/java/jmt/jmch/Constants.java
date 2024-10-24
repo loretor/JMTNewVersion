@@ -18,7 +18,6 @@
 
 package jmt.jmch;
 
-import org.freehep.graphicsio.swf.SWFAction.If;
 
 /**
  * Class that contains most of the descriptions and help labels of JMCH
@@ -112,9 +111,9 @@ public class Constants {
     public static final String HELP_ANIMATION = "The max number of jobs in the queue is 5, jobs that arrive when this value has been reached are dropped";
 
     public static final String[] HELP_BUTTONS_ANIMATIONS = {
-        "Start the simulation or reload it, if it was paused", 
+        "Start the simulation or restart it, if it was paused", 
         "Pause the running simulation",
-        "Reload the simulation",  
+        "Restart the simulation",  
         "Perform a next step in the simulation",
         "Halve the simulation's velocity",
         "Double the simulation's velocity",
@@ -158,7 +157,7 @@ public class Constants {
     };
 
     public static final String[] HELP_BUTTONS_MARKOV = {
-        "Start the simulation or reload it, if it was paused", 
+        "Start the simulation or restart it, if it was paused", 
         "Pause the running simulation",
         "Stop the running simulation",
         "Open the help page"

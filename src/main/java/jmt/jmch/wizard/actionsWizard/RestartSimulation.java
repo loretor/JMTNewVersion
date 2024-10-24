@@ -27,7 +27,7 @@ import jmt.jmch.wizard.panels.JMCHWizardPanel;
  * Date: 30-mar-2024
  * Time: 15.20
  */
-public class ReloadSimulation extends AbstractMCHAction {
+public class RestartSimulation extends AbstractMCHAction {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,9 +35,9 @@ public class ReloadSimulation extends AbstractMCHAction {
      * Defines an <code>Action</code> object with a default
      * description string and default icon.
      */
-    public ReloadSimulation(JMCHWizardPanel panel) {
-        super("Reload Simulation", "Stop", panel);
-        putValue(SHORT_DESCRIPTION, "Reload simulation");
+    public RestartSimulation(JMCHWizardPanel panel) {
+        super("Restart Simulation", "Stop", panel);
+        putValue(SHORT_DESCRIPTION, "Restart simulation");
         //putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_R));
     }
 

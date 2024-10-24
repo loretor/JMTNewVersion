@@ -20,6 +20,7 @@ package jmt.jmch.wizard;
 
 import jmt.gui.common.CommonConstants;
 import jmt.gui.common.JMTImageLoader;
+import jmt.gui.common.panels.AboutDialogFactory;
 import jmt.jmch.simulation.RoutingSimulation;
 import jmt.jmch.simulation.Simulation;
 import jmt.jmch.simulation.SimulationType;
@@ -122,7 +123,6 @@ public class MainWizard extends JMCHWizard{
 
 		// decide if you need to forward also the results of previous simulations
 		if(rs != null && rs.getPreviousSimulationType() == simulation.getType()){	
-			System.out.println("equal type of simulation");	
 			resultsPanel.setResults(rs);
 		}
 		
@@ -266,6 +266,10 @@ public class MainWizard extends JMCHWizard{
 
 	public void setLastPanel() {
 		tabbedPane.setSelectedIndex(lastPanel);
+	}
+
+	public void about() {
+		AboutDialogFactory.showJMCH(this);
 	}
 }
 

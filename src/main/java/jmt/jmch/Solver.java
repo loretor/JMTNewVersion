@@ -17,7 +17,7 @@ import jmt.gui.common.distributions.Uniform;
 import jmt.gui.common.routingStrategies.ProbabilityRouting;
 import jmt.jmch.simulation.Simulation;
 import jmt.jmch.simulation.SimulationType;
-import jmt.jmch.wizard.panels.AnimationPanel;
+
 
 /**
  * This class transforms the information of the Animation to match the structure of the CommonModel class.
@@ -31,6 +31,7 @@ public class Solver implements CommonConstants{
     private CommonModel model;
     private Simulation simulation;
     private boolean isSingleQueue = true;
+    private double lambda;
 
     private int classNameIndex = 1;
     private int serverNameIndex = 1;
@@ -106,6 +107,7 @@ public class Solver implements CommonConstants{
         model = new CommonModel();
         simulation = sim;
         servers = nservers;
+        this.lambda = lambda;
         isSingleQueue = simulation.getType() != SimulationType.ROUTING;
         setDistributionsParameters(serviceDistributions, mhu);
         setDistributionsParameters(interArrivalDistributions, lambda);
@@ -130,6 +132,10 @@ public class Solver implements CommonConstants{
             setRouterStrategy(prob);
             checkNumberOfQueues(prob);
         } 
+
+        //same configuration = same result (remove randomness)
+        model.setUseRandomSeed(false);
+        model.setSimulationSeed(23000l);
     }
 
     /** Set the parameters for all the distributions. Always keep the mean = 1/mhu, change the cv accordingly */
@@ -321,6 +327,10 @@ public class Solver implements CommonConstants{
 
     public String getInterArrivalDistribution(){
         return ((Distribution) model.getClassDistribution(classKey)).toString();
+    }
+
+    public double getInterArrivalTimeMean(){
+        return lambda;
     }
 
     public String getServiceDistribution(){

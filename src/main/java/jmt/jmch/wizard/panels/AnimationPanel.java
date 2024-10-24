@@ -20,8 +20,6 @@ package jmt.jmch.wizard.panels;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,7 +31,6 @@ import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 
 import javax.swing.AbstractButton;
@@ -77,7 +74,7 @@ import jmt.jmch.wizard.actionsWizard.Help;
 import jmt.jmch.wizard.actionsWizard.IncreaseVelocity;
 import jmt.jmch.wizard.actionsWizard.NextStepSimulation;
 import jmt.jmch.wizard.actionsWizard.PauseSimulation;
-import jmt.jmch.wizard.actionsWizard.ReloadSimulation;
+import jmt.jmch.wizard.actionsWizard.RestartSimulation;
 import jmt.jmch.wizard.actionsWizard.StartSimulation;
 import jmt.jmch.animation.AnimationClass;
 import jmt.jmch.animation.MultipleQueueNetAnimation;
@@ -191,7 +188,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
         exit = new Exit(this);
         start = new StartSimulation(this);
         pause = new PauseSimulation(this);
-        reload = new ReloadSimulation(this);
+        reload = new RestartSimulation(this);
         nextStep = new NextStepSimulation(this);
         openHelp = new Help(this,"JTCH");
         about = new About(this);
@@ -778,21 +775,6 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
 		buttons.addAll(toolbar.populateToolbar(actions));
         toolbar.setFloatable(false);
 
-
-        /*SwingUtilities.invokeLater(() -> {
-        	System.out.println(toolbar.getHeight());
-            int toolbarHeight = toolbar.getHeight();
-
-            toolbar.setPreferredSize(new Dimension(toolbar.getWidth(), toolbarHeight));
-            toolbar.setMaximumSize(new Dimension(Integer.MAX_VALUE, toolbarHeight)); 
-
-            VelocityPanel vp = new VelocityPanel();
-            toolbar.add(vp); 
-        });
-         
-        
-        System.out.println(toolbar.getHeight()); */
-
         //add help for each Action/JComboBox with helpLabel
 		for (int i = 0; i < buttons.size(); i++) {
 			AbstractButton button = buttons.get(i);
@@ -885,12 +867,14 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
 
     @Override
     public void openHelp() {
-        //TODO:fai help
+        
     }
 
     //----------------- toolbar buttons actions
     @Override
     public void startAnimation() {
+        animation.getSource().resetEngines(); //always reset the engine
+
         if(!nextStep.isEnabled()){
             updateAnimationPanel(); 
             setEditableComponents(false);
@@ -1059,7 +1043,7 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
 
         parent.routeResults(solver.getStrategy(), 
             solver.getInterArrivalDistribution(), 
-            getLastMeasure(results, 0),
+            solver.getInterArrivalTimeMean(),
             solver.getServiceDistribution(), 
             solver.getNumberServers(),
             solver.getServiceTimeMean(), 
@@ -1068,51 +1052,5 @@ public class AnimationPanel extends JMCHWizardPanel implements GuiInterface{
             getLastMeasure(results, 2), 
             getLastMeasure(results, 3), 
             getLastMeasure(results, 4));          
-    }
-}
-
-/**
- * Panel in the toolBar for the velocity of the simlation
- */
-class VelocityPanel extends JPanel{
-    private JLabel velocityL;
-
-    private JSlider velocityS;
-    private final int min = 5;   // 0.5
-    private final int max = 20;  // 2.0
-    private final int init = 10; // 1.0
-    private final double multiplier = 10.0;
-
-    public VelocityPanel(){
-        super(new BorderLayout());
-        
-        initialize();
-    }
-
-    public void initialize(){
-        JPanel mainPanel = new JPanel(new FlowLayout());
-        //mainPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, maxHeight));
-        //mainPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, maxHeight));
-
-        velocityL = new JLabel("Simulation Velocity");
-        mainPanel.add(velocityL);
-
-        velocityS = new JSlider(min, max, init);
-        velocityS.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        velocityS.setMajorTickSpacing(5); 
-        velocityS.setMinorTickSpacing(1);
-        velocityS.setPaintLabels(true);
-
-        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
-        for (int i = min; i <= max; i = i+5) {
-            JLabel label = new JLabel(String.valueOf(i / multiplier));
-            label.setFont(new Font("Serif", Font.PLAIN, 10)); 
-            labelTable.put(i, label);
-        }
-        velocityS.setLabelTable(labelTable);
-        //velocityS.setPreferredSize(new Dimension(Integer.MAX_VALUE, maxHeight)); 
-        mainPanel.add(velocityS);
-
-        this.add(mainPanel, BorderLayout.WEST);
     }
 }

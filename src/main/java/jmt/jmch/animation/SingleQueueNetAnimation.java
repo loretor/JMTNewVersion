@@ -197,4 +197,8 @@ public class SingleQueueNetAnimation extends AnimationClass{
 		source.updateDistribution(service, interA);	
 	}
 
+	@Override
+	public Source getSource() {
+		return source;
+	}
 }

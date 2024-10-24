@@ -18,7 +18,6 @@
 
 package jmt.jmch.animation;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -322,5 +321,10 @@ public class MultipleQueueNetAnimation extends AnimationClass{
 		probabilities[1] = percentages[1];
 		probabilities[2] = 1.00 - percentages[0] - percentages[1];
 		router.changeProbabilities(probabilities);
+	}
+
+	@Override
+	public Source getSource() {
+		return source;
 	}
 }

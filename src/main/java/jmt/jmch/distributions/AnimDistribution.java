@@ -38,12 +38,12 @@ import jmt.engine.random.engine.RandomEngine;
  * Date: 29-mar-2024
  * Time: 13.40
  * 
- * modified {23-jun-2024}
  */
 public abstract class AnimDistribution {
     protected double mean;
     protected double lambda;
     protected double[] percentiles = new double[2];
+    protected RandomEngine engine = new MersenneTwister(23000);
 
     private static final String[] distributions = {ExponentialD.NAME, DeterminsiticD.NAME, UniformD.NAME, HyperExponentialD.NAME};
 
@@ -52,8 +52,16 @@ public abstract class AnimDistribution {
     }
 
     /** creates a random engine for the nextrand() of each distribution */
-    protected static RandomEngine createEngine(){
-        return new MersenneTwister();
+    protected RandomEngine createEngine(){
+        return engine;
+    }
+
+    /**
+     * Reset the engine for the distributions
+     * This is needed because we would like that if we start a new animation, the inter arrival times, the service times... are not completely random but pseudo random, and they follow always the same pattern
+     */
+    public void resetEngine(){
+        engine = new MersenneTwister(23000);
     }
 
     /** 

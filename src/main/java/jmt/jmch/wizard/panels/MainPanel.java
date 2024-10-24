@@ -22,16 +22,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
@@ -44,9 +40,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -54,13 +48,11 @@ import javax.swing.border.EtchedBorder;
 import jmt.framework.gui.components.JMTMenuBar;
 import jmt.framework.gui.components.JMTToolBar;
 import jmt.framework.gui.help.HoverHelp;
-import jmt.framework.gui.listeners.AbstractJMTAction;
 import jmt.framework.gui.listeners.MenuAction;
-import jmt.framework.gui.wizard.WizardPanel;
 import jmt.gui.common.CommonConstants;
 import jmt.gui.common.JMTImageLoader;
-import jmt.gui.jwat.JWatWizard;
 import jmt.jmch.Constants;
+import jmt.jmch.wizard.actionsWizard.About;
 import jmt.jmch.wizard.actionsWizard.AbstractMCHAction;
 import jmt.jmch.wizard.actionsWizard.Help;
 import jmt.jmch.simulation.Simulation;
@@ -93,6 +85,7 @@ public class MainPanel extends JMCHWizardPanel{
 
 	//all actions associated to the buttons of the Menu and ToolBar
     private AbstractMCHAction openHelp;
+	private AbstractMCHAction about;
 
 
 	//all the AbstractActions associated to the buttons related of this panel only
@@ -240,7 +233,8 @@ public class MainPanel extends JMCHWizardPanel{
         parent = main;
 		help = parent.getHoverHelp();
 
-        openHelp = new Help(this,"JTCH");
+        openHelp = new Help(this, "JMCH");
+		about = new About(this);
 
         initGUI();
     }
@@ -452,7 +446,7 @@ public class MainPanel extends JMCHWizardPanel{
         MenuAction action = new MenuAction("File", new AbstractMCHAction[] { null});
 
         //Help window
-        action = new MenuAction("Help", new AbstractMCHAction[] {openHelp, null});
+        action = new MenuAction("Help", new AbstractMCHAction[] {openHelp, null, about});
 		menu.addMenu(action);
 
         parent.setMenuBar(menu);

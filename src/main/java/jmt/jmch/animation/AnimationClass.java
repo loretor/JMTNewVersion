@@ -129,4 +129,9 @@ public class AnimationClass extends JComponent implements Animation{
 	public void setVelocityFactor(int velocity) {
 		
 	}
+
+	@Override
+	public Source getSource(){
+		return null;
+	}
 }

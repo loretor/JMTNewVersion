@@ -19,7 +19,6 @@
 package jmt.jmch.animation;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Random;
@@ -61,16 +60,11 @@ public class Job extends JComponent{
 	private long entrance; //this value is the associated long value for the entrance of a job inside a JComponent
 	private int velocityFactor = 1;
 	
-	public Job(AnimDistribution service, Color color) {	
+	public Job(AnimDistribution service, double duration, Color color) {	
 		this.color = color;
 		priority = new Random().nextInt(5)+1; //set priority always > 1 otherwise it does not work properly in the BoxStation
 		this.service = service;
-		try {
-			duration = service.nextRand(); 
-		} catch (IncorrectDistributionParameterException e) {
-			//this will never happen if the parameters of the distribution are correclty chosen
-			duration = 0.0;
-		}
+		this.duration = duration;
 		mapDuration = service.mapValue(duration); //based on the type of distribution, map the duration to a value between 0 and 1
 	}
 	

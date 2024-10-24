@@ -72,5 +72,6 @@ public interface Animation {
 	*/
 	public void updatePause(long pause);
 
+	public Source getSource();
 }
  
